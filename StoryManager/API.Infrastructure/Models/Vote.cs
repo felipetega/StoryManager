@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace API.Infrastructure.Models
 {
-    internal class Vote
+    public class Vote
     {
         public Vote(bool voteValue)
         {

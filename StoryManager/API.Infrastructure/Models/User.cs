@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace API.Infrastructure.Models
 {
-    internal class User
+    public class User
     {
         public User(string name)
         {

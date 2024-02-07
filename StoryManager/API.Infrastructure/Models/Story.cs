@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace API.Infrastructure.Models
 {
-    internal class Story
+    public class Story
     {
         public Story(string title, string description, string department)
         {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace API.Infrastructure.Context
 {
-    internal class ApiContext:DbContext
+    public class ApiContext:DbContext
     {
         public ApiContext(DbContextOptions<ApiContext> options)
             : base(options)
@@ -27,18 +27,18 @@ namespace API.Infrastructure.Context
 
             modelBuilder.Entity<User>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<User>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<User>().Property(p => p.Name).IsRequired().HasMaxLength(25);
 
             //STORY
             modelBuilder.Entity<Story>().HasKey(p => p.Id);
 
             modelBuilder.Entity<Story>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Story>().Property(p => p.Title).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<Story>().Property(p => p.Title).IsRequired().HasMaxLength(25);
 
-            modelBuilder.Entity<Story>().Property(p => p.Description).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<Story>().Property(p => p.Description).IsRequired().HasMaxLength(200);
 
-            modelBuilder.Entity<Story>().Property(p => p.Department).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<Story>().Property(p => p.Department).IsRequired().HasMaxLength(25);
 
             // Configuração da tabela VOTE
             modelBuilder.Entity<Vote>().HasKey(p => p.Id);
