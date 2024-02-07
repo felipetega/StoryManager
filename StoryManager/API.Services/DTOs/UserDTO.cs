@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using API.Infrastructure.Models;
 
 namespace API.Services.DTOs
 {
-    internal class UserDTO
+    public class UserDTO
     {
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public List<VoteDTO> Votes { get; set; }
     }
 }

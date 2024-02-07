@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace API.Services.Services
 {
-    internal class StoryService
+    public class StoryService
     {
+
     }
 }
