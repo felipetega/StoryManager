@@ -1,4 +1,6 @@
 using API.Infrastructure.Context;
+using API.Services.Services;
+using API.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,7 @@ builder.Services.AddDbContext<ApiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ApiContext"),
     b => b.MigrationsAssembly("API.Infrastructure")));
 // Add services to the container.
+builder.Services.AddScoped<IStoryService, StoryService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

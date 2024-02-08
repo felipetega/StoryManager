@@ -8,10 +8,10 @@ namespace API.Infrastructure.Models
 {
     public class Vote
     {
-        public Vote(bool voteValue)
-        {
-            VoteValue = voteValue;
-        }
+        //public Vote(bool voteValue)
+        //{
+        //    VoteValue = voteValue;
+        //}
 
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -8,6 +8,6 @@ namespace API.Services.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<VoteDTO> Votes { get; set; }
+        public IEnumerable<VoteDTO> Votes { get; set; }
     }
 }

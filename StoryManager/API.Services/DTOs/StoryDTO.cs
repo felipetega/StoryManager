@@ -9,6 +9,6 @@ namespace API.Services.DTOs
         public string Description { get; set; }
         public string Department { get; set; }
 
-        public List<VoteDTO> Votes { get; set; }
+        public IEnumerable<VoteDTO> Votes { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace API.Application.ViewModel
         public string Description { get; set; }
         public string Department { get; set; }
 
-        public List<VoteView> Votes { get; set; }
+        public IEnumerable<VoteView> Votes { get; set; }
     }
 }

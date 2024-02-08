@@ -1,83 +1,134 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.Application.ViewModel;
+using API.Services.DTOs;
+using API.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Application.Controllers
 {
-    public class StoryController : Controller
+    public class StoryController : ControllerBase
     {
-        // GET: StoryController
-        public ActionResult Index()
+        private readonly IStoryService _storyService;
+
+        public StoryController(IStoryService storyService)
         {
-            return View();
+            _storyService = storyService;
         }
 
-        // GET: StoryController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("api")]
+        [ProducesResponseType(typeof(List<StoryView>), 200)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<List<StoryView>>> GetAll()
         {
-            return View();
-        }
+            IEnumerable<StoryDTO> storyDTOs = await _storyService.GetAll();
 
-        // GET: StoryController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: StoryController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            if (storyDTOs == null || !storyDTOs.Any())
             {
-                return RedirectToAction(nameof(Index));
+                return NoContent();
             }
-            catch
+
+            List<StoryView> storyViews = storyDTOs.Select(storyDTO => new StoryView
             {
-                return View();
-            }
+                Title = storyDTO.Title,
+                Description = storyDTO.Description,
+                Department = storyDTO.Department,
+                Votes = storyDTO.Votes.Select(voteDTO => new VoteView
+                {
+                    VoteValue = voteDTO.VoteValue,
+                    User = new UserView
+                    {
+                        Name = voteDTO.User.Name,
+                    },
+                    Story = new StoryView
+                    {
+                        Title = voteDTO.Story.Title,
+                        Description = voteDTO.Story.Description,
+                        Department = voteDTO.Story.Department,
+                    }
+                })
+            }).ToList();
+
+            return Ok(storyViews);
         }
 
-        // GET: StoryController/Edit/5
-        public ActionResult Edit(int id)
+
+
+        [HttpPost("api")]
+        [ProducesResponseType(typeof(StoryView), 201)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<StoryView>> Create(string title, string description, string department)
         {
-            return View();
+            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description) ||
+                string.IsNullOrWhiteSpace(department))
+            {
+                return BadRequest();
+            }
+
+            StoryDTO storyDTO = new StoryDTO
+            {
+                Title = title,
+                Description = description,
+                Department = department
+            };
+
+            await _storyService.Create(storyDTO);
+
+
+            return Ok();
         }
 
-        // POST: StoryController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut("api/{id}")]
+        [ProducesResponseType(typeof(StoryView), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<StoryView>> Update(int id, string title, string description, string department)
         {
-            try
+            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description) ||
+                string.IsNullOrWhiteSpace(department))
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Invalid input. Title, Description, and Department are required.");
             }
-            catch
+
+            StoryDTO storyDTO = new StoryDTO
             {
-                return View();
+                Id = id,
+                Title = title,
+                Description = description,
+                Department = department
+            };
+
+            StoryDTO updatedStoryDTO = await _storyService.Update(storyDTO, id);
+
+            if (updatedStoryDTO == null)
+            {
+                return NotFound();
             }
+
+            StoryView updatedStoryView = new StoryView
+            {
+                Title = title,
+                Description = description,
+                Department = department
+            };
+
+            return Ok(updatedStoryView);
         }
 
-        // GET: StoryController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: StoryController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete("api/{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<StoryView>> Delete(int id)
         {
-            try
+            bool deleted = await _storyService.Delete(id);
+
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+
+            return Ok(deleted);
         }
     }
 }

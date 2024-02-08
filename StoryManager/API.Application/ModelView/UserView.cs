@@ -7,6 +7,6 @@ namespace API.Application.ViewModel
 
         public string Name { get; set; }
 
-        public List<VoteView> Votes { get; set; }
+        public IEnumerable<VoteView> Votes { get; set; }
     }
 }
