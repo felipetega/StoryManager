@@ -30,31 +30,16 @@ namespace API.Services.Services
                         Id = v.Id,
                         UserId = v.UserId,
                         StoryId = v.StoryId,
-                        VoteValue = v.VoteValue
+                        VoteValue = v.VoteValue,
+                        User = new UserDTO()
+                        {
+                            Name = v.User.Name
+                        }
                     })
                 })
                 .ToListAsync();
         }
 
-        //public async Task<StoryDTO> GetById(int id)
-        //{
-        //    return await _context.Stories
-        //        .Select(s => new StoryDTO()
-        //        {
-        //            Id = s.Id,
-        //            Title = s.Title,
-        //            Description = s.Description,
-        //            Department = s.Department,
-        //            Votes = s.Votes.Select(v => new VoteDTO
-        //            {
-        //                Id = v.Id,
-        //                UserId = v.UserId,
-        //                StoryId = v.StoryId,
-        //                VoteValue = v.VoteValue
-        //            })
-        //        })
-        //        .FirstOrDefaultAsync(x => x.Id == id);
-        //}
 
         public async Task<StoryDTO> Create(StoryDTO storyDTO)
         {

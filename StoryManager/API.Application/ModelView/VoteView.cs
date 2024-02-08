@@ -5,6 +5,8 @@ namespace API.Application.ViewModel
     public class VoteView
     {
 
+        public int UserId { get; set; }
+        public int StoryId { get; set; }
         public bool VoteValue { get; set; }
 
 

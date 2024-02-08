@@ -9,7 +9,9 @@ builder.Services.AddDbContext<ApiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ApiContext"),
     b => b.MigrationsAssembly("API.Infrastructure")));
 // Add services to the container.
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStoryService, StoryService>();
+builder.Services.AddScoped<IVoteService, VoteService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

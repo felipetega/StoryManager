@@ -1,83 +1,109 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.Application.ViewModel;
+using API.Services.DTOs;
+using API.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Application.Controllers
 {
     public class VoteController : Controller
     {
-        // GET: VoteController
-        public ActionResult Index()
+        private readonly IVoteService _voteService;
+
+        public VoteController(IVoteService voteService)
         {
-            return View();
+            _voteService = voteService;
         }
 
-        // GET: VoteController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("votes")]
+        [ProducesResponseType(typeof(List<VoteView>), 200)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<List<VoteView>>> GetAll()
         {
-            return View();
-        }
+            IEnumerable<VoteDTO> voteDTOs = await _voteService.GetAll();
 
-        // GET: VoteController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: VoteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            if (voteDTOs == null || !voteDTOs.Any())
             {
-                return RedirectToAction(nameof(Index));
+                return NoContent();
             }
-            catch
+
+            List<VoteView> voteViews = voteDTOs.Select(voteDTO => new VoteView
             {
-                return View();
-            }
+                VoteValue = voteDTO.VoteValue,
+            }).ToList();
+
+            return Ok(voteViews);
         }
 
-        // GET: VoteController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPost("votes")]
+        [ProducesResponseType(typeof(VoteView), 201)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<VoteView>> Create(int userId, int storyId, bool voteValue)
         {
-            return View();
+            if (userId <= 0 || storyId <= 0)
+            {
+                return BadRequest("Invalid input. UserId and StoryId are required.");
+            }
+
+            VoteDTO voteDTO = new VoteDTO
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
+            await _voteService.Create(voteDTO);
+
+            return Ok(new VoteView { VoteValue = voteValue });
         }
 
-        // POST: VoteController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut("votes/{id}")]
+        [ProducesResponseType(typeof(VoteView), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<VoteView>> Update(int id, int userId, int storyId, bool voteValue)
         {
-            try
+            if (id<0)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Invalid input. VoteValue must be greater than zero.");
             }
-            catch
+
+            VoteDTO voteDTO = new VoteDTO
             {
-                return View();
+                Id = id,
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
+            VoteDTO updatedVoteDTO = await _voteService.Update(voteDTO, id);
+
+            if (updatedVoteDTO == null)
+            {
+                return NotFound();
             }
+
+            VoteView updatedVoteView = new VoteView
+            {
+                VoteValue = voteValue
+            };
+
+            return Ok(updatedVoteView);
         }
 
-        // GET: VoteController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpDelete("votes/{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<bool>> Delete(int id)
         {
-            return View();
-        }
+            bool deleted = await _voteService.Delete(id);
 
-        // POST: VoteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+
+            return Ok(deleted);
         }
     }
 }

@@ -16,45 +16,40 @@ namespace API.Application.Controllers
             _storyService = storyService;
         }
 
-        [HttpGet("api")]
+        [HttpGet("stories")]
         [ProducesResponseType(typeof(List<StoryView>), 200)]
         [ProducesResponseType(204)]
         public async Task<ActionResult<List<StoryView>>> GetAll()
         {
             IEnumerable<StoryDTO> storyDTOs = await _storyService.GetAll();
 
-            if (storyDTOs == null || !storyDTOs.Any())
+            List<StoryView> storyViewModel = storyDTOs.Select(x => new StoryView()
+            {
+                Department = x.Department,
+                Description = x.Description,
+                Title = x.Title,
+                Votes = x.Votes.Select(y => new VoteView()
+                {
+                    VoteValue = y.VoteValue,
+                    User = new UserView()
+                    {
+                        Name = y.User.Name,
+                    }
+                })
+            }).ToList();
+            if (storyViewModel.Count == 0)
             {
                 return NoContent();
             }
 
-            List<StoryView> storyViews = storyDTOs.Select(storyDTO => new StoryView
-            {
-                Title = storyDTO.Title,
-                Description = storyDTO.Description,
-                Department = storyDTO.Department,
-                Votes = storyDTO.Votes.Select(voteDTO => new VoteView
-                {
-                    VoteValue = voteDTO.VoteValue,
-                    User = new UserView
-                    {
-                        Name = voteDTO.User.Name,
-                    },
-                    Story = new StoryView
-                    {
-                        Title = voteDTO.Story.Title,
-                        Description = voteDTO.Story.Description,
-                        Department = voteDTO.Story.Department,
-                    }
-                })
-            }).ToList();
-
-            return Ok(storyViews);
+            return StatusCode(200, storyViewModel);
         }
 
 
 
-        [HttpPost("api")]
+
+
+        [HttpPost("stories")]
         [ProducesResponseType(typeof(StoryView), 201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<StoryView>> Create(string title, string description, string department)
@@ -75,10 +70,10 @@ namespace API.Application.Controllers
             await _storyService.Create(storyDTO);
 
 
-            return Ok();
+            return Created();
         }
 
-        [HttpPut("api/{id}")]
+        [HttpPut("stories/{id}")]
         [ProducesResponseType(typeof(StoryView), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
@@ -116,7 +111,7 @@ namespace API.Application.Controllers
         }
 
 
-        [HttpDelete("api/{id}")]
+        [HttpDelete("stories/{id}")]
         [ProducesResponseType(typeof(bool), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoryView>> Delete(int id)

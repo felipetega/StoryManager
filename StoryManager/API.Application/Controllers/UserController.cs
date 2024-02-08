@@ -1,83 +1,105 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.Application.ViewModel;
+using API.Services.DTOs;
+using API.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Application.Controllers
 {
     public class UserController : Controller
     {
-        // GET: UserController
-        public ActionResult Index()
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
         {
-            return View();
+            _userService = userService;
         }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("users")]
+        [ProducesResponseType(typeof(List<UserView>), 200)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<List<UserView>>> GetAll()
         {
-            return View();
-        }
+            IEnumerable<UserDTO> userDTOs = await _userService.GetAll();
 
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            if (userDTOs == null || !userDTOs.Any())
             {
-                return RedirectToAction(nameof(Index));
+                return NoContent();
             }
-            catch
+
+            List<UserView> userViews = userDTOs.Select(userDTO => new UserView
             {
-                return View();
-            }
+                Name = userDTO.Name,
+            }).ToList();
+
+            return Ok(userViews);
         }
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPost("users")]
+        [ProducesResponseType(typeof(UserView), 201)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<UserView>> Create(string name)
         {
-            return View();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Invalid input. Name is required.");
+            }
+
+            UserDTO userDTO = new UserDTO
+            {
+                Name = name
+            };
+
+            await _userService.Create(userDTO);
+
+            return Ok(new UserView { Name = name });
         }
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut("users/{id}")]
+        [ProducesResponseType(typeof(UserView), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<UserView>> Update(int id, string name)
         {
-            try
+            if (string.IsNullOrWhiteSpace(name))
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Invalid input. Name is required.");
             }
-            catch
+
+            UserDTO userDTO = new UserDTO
             {
-                return View();
+                Id = id,
+                Name = name
+            };
+
+            UserDTO updatedUserDTO = await _userService.Update(userDTO, id);
+
+            if (updatedUserDTO == null)
+            {
+                return NotFound();
             }
+
+            UserView updatedUserView = new UserView
+            {
+                Name = name
+            };
+
+            return Ok(updatedUserView);
         }
 
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpDelete("users/{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<bool>> Delete(int id)
         {
-            return View();
-        }
+            bool deleted = await _userService.Delete(id);
 
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+
+            return Ok(deleted);
         }
     }
 }
