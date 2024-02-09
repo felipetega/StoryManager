@@ -154,3 +154,6 @@ C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\obj\Debug\net8.0\refint\Te
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\obj\Debug\net8.0\TestProject.pdb
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\obj\Debug\net8.0\TestProject.genruntimeconfig.cache
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\obj\Debug\net8.0\ref\TestProject.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\AutoFixture.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\Fare.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\AutoFixture.AutoMoq.dll
