@@ -18,7 +18,7 @@ namespace API.Services.Services
 
         public async Task<List<StoryDTO>> GetAll()
         {
-            return await _context.Stories
+            var stories = await _context.Stories
                 .Select(s => new StoryDTO
                 {
                     Id = s.Id,
@@ -38,7 +38,13 @@ namespace API.Services.Services
                     })
                 })
                 .ToListAsync();
+
+            var sortedStories = stories.OrderByDescending(s => s.Votes.Sum(v => v.VoteValue ? 1 : -1)).ToList();
+
+            return sortedStories;
         }
+
+
 
 
         public async Task<StoryDTO> Create(StoryDTO storyDTO)
