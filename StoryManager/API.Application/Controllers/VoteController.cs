@@ -36,7 +36,7 @@ namespace API.Application.Controllers
         }
 
         [HttpPost("votes")]
-        [ProducesResponseType(typeof(VoteView), 201)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<VoteView>> Create(int userId, int storyId, bool voteValue)
         {
@@ -54,7 +54,7 @@ namespace API.Application.Controllers
 
             await _voteService.Create(voteDTO);
 
-            return Ok(new VoteView { VoteValue = voteValue });
+            return Ok();
         }
 
         [HttpPut("votes/{id}")]
@@ -92,7 +92,7 @@ namespace API.Application.Controllers
         }
 
         [HttpDelete("votes/{id}")]
-        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<bool>> Delete(int id)
         {
@@ -103,7 +103,7 @@ namespace API.Application.Controllers
                 return NotFound();
             }
 
-            return Ok(deleted);
+            return Ok();
         }
     }
 }

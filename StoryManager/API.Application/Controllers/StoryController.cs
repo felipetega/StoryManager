@@ -50,7 +50,7 @@ namespace API.Application.Controllers
 
 
         [HttpPost("stories")]
-        [ProducesResponseType(typeof(StoryView), 201)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<StoryView>> Create(string title, string description, string department)
         {

@@ -36,7 +36,7 @@ namespace API.Application.Controllers
         }
 
         [HttpPost("users")]
-        [ProducesResponseType(typeof(UserView), 201)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<UserView>> Create(string name)
         {
@@ -52,7 +52,7 @@ namespace API.Application.Controllers
 
             await _userService.Create(userDTO);
 
-            return Ok(new UserView { Name = name });
+            return Ok();
         }
 
         [HttpPut("users/{id}")]
@@ -88,7 +88,7 @@ namespace API.Application.Controllers
         }
 
         [HttpDelete("users/{id}")]
-        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<bool>> Delete(int id)
         {
@@ -99,7 +99,7 @@ namespace API.Application.Controllers
                 return NotFound();
             }
 
-            return Ok(deleted);
+            return Ok();
         }
     }
 }
