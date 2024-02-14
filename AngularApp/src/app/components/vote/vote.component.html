@@ -1,11 +1,11 @@
 <div>
     <div>
         <label for="user">user</label>
-        <input type="text">
+        <input type="text" [(ngModel)]="userId">
     </div>
 
-
     @for(item of data; track item.id){
+    <div>
         <div class="story-card">
 
             <div>
@@ -15,12 +15,11 @@
             </div>
     
             <div>
-                <button>Vote yes</button>
-                <button>Vote no</button>
+                <button (click)="vote(item.id, true)">Vote yes</button>
+                <button (click)="vote(item.id, false)">Vote no</button>
             </div>
     
         </div>
-
-    }
-
+    </div>
+}
 </div>

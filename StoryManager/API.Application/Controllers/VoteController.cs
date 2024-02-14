@@ -38,24 +38,18 @@ namespace API.Application.Controllers
         [HttpPost("votes")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<VoteView>> Create(int userId, int storyId, bool voteValue)
+        public async Task<ActionResult<VoteView>> Create([FromBody] VoteDTO voteDTO)
         {
-            if (userId <= 0 || storyId <= 0)
+            if (voteDTO.UserId <= 0 || voteDTO.StoryId <= 0)
             {
                 return BadRequest("Invalid input. UserId and StoryId are required.");
             }
 
-            VoteDTO voteDTO = new VoteDTO
-            {
-                UserId = userId,
-                StoryId = storyId,
-                VoteValue = voteValue
-            };
-
             await _voteService.Create(voteDTO);
 
-            return Ok();
+            return Created();
         }
+
 
         [HttpPut("votes/{id}")]
         [ProducesResponseType(typeof(VoteView), 200)]

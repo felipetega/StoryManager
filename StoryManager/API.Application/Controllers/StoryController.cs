@@ -25,6 +25,7 @@ namespace API.Application.Controllers
 
             List<StoryView> storyViewModel = storyDTOs.Select(x => new StoryView()
             {
+                Id = x.Id,
                 Department = x.Department,
                 Description = x.Description,
                 Title = x.Title,
