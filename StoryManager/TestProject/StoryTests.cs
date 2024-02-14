@@ -100,10 +100,13 @@ namespace TestProject
             var result = await storyController.Create(title, description, department);
 
             // Assert
-            var createdResult = Assert.IsType<CreatedResult>(result.Result);
-            Assert.Null(createdResult.Value);
+            var createdResult = Assert.IsType<ObjectResult>(result.Result);
+            Assert.Equal(201, createdResult.StatusCode);
+            Assert.Equal("Created", createdResult.Value);
 
+            // You can also assert other properties of the ObjectResult if needed.
         }
+
 
         [Fact]
         public async Task Create_ReturnsBadRequest_WhenInvalidInput()

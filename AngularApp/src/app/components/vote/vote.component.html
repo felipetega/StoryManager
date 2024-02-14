@@ -1,0 +1,26 @@
+<div>
+    <div>
+        <label for="user">user</label>
+        <input type="text">
+    </div>
+
+
+    @for(item of data; track item.id){
+        <div class="story-card">
+
+            <div>
+                <h2>Story name: {{item.title}}</h2>
+                <p>Description {{item.description}}</p>
+                <p>Department {{item.department}}</p>
+            </div>
+    
+            <div>
+                <button>Vote yes</button>
+                <button>Vote no</button>
+            </div>
+    
+        </div>
+
+    }
+
+</div>

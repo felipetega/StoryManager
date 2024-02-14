@@ -1,0 +1,15 @@
+<h2>Create Story</h2>
+<div class="city-form">
+    <label for="cityName">City Name:</label>
+    <input type="text" id="cityName" [(ngModel)]="newCity.cityName" />
+
+    <label for="stateName">State Name:</label>
+    <input type="text" id="stateName" [(ngModel)]="newCity.stateName" />
+
+    <button (click)="createCity()">Create City</button>
+
+    <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+        <button (click)="closeSuccessMessage()">Close</button>
+    </div>
+</div>

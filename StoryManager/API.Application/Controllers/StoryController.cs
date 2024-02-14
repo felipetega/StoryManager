@@ -70,7 +70,7 @@ namespace API.Application.Controllers
             await _storyService.Create(storyDTO);
 
 
-            return Created();
+            return StatusCode(201, "Created");
         }
 
         [HttpPut("stories/{id}")]
