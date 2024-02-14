@@ -1,17 +1,21 @@
 <div>
     <div>
-        <label for="user">user</label>
+        <label for="user">User ID</label>
         <input type="text" [(ngModel)]="userId">
     </div>
 
     @for(item of data; track item.id){
-    <div>
+    <div class="story-container">
         <div class="story-card">
 
             <div>
-                <h2>Story name: {{item.title}}</h2>
+                <div>
+                    <h2>Story name: {{item.title}}</h2>
+
+                </div>
                 <p>Description {{item.description}}</p>
                 <p>Department {{item.department}}</p>
+                <p>Vote Balance: {{calculateVoteBalance(item.votes)}}</p>
             </div>
     
             <div>
@@ -19,6 +23,7 @@
                 <button (click)="vote(item.id, false)">Vote no</button>
             </div>
     
+
         </div>
     </div>
 }

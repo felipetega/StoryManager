@@ -49,6 +49,10 @@ export class VoteComponent implements OnInit {
     });
   }
 
+  calculateVoteBalance(votes: any[]): number {
+    return votes.reduce((acc, vote) => acc + (vote.voteValue ? 1 : -1), 0);
+  }
+
   trackById(index: number, item: any): number {
     return item.id;
   }
