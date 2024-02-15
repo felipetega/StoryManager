@@ -89,7 +89,7 @@ namespace TestProject
             var description = "Sample description";
             var department = "IT";
 
-            var storyDTO = new StoryDTO
+            var storyView = new CreateStoryView
             {
                 Title = title,
                 Description = description,
@@ -97,7 +97,7 @@ namespace TestProject
             };
 
             // Act
-            var result = await storyController.Create(title, description, department);
+            var result = await storyController.Create(storyView);
 
             // Assert
             var createdResult = Assert.IsType<ObjectResult>(result.Result);

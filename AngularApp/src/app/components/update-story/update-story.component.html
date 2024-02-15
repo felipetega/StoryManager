@@ -1,0 +1,21 @@
+<h2>Update Story</h2>
+<div class="story-form">
+    <label for="user">Story ID</label>
+    <input type="text" [(ngModel)]="storyId">
+    
+    <label for="title">Title:</label>
+    <input type="text" id="title" [(ngModel)]="updatedStory.title" />
+
+    <label for="description">Description:</label>
+    <input id="description" [(ngModel)]="updatedStory.description" />
+
+    <label for="department">Department:</label>
+    <input type="text" id="department" [(ngModel)]="updatedStory.department" />
+
+    <button (click)="updateStory()">Update Story</button>
+
+    <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+        <button (click)="closeSuccessMessage()">Close</button>
+    </div>
+</div>

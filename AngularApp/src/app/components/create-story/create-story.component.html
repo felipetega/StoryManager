@@ -1,12 +1,15 @@
 <h2>Create Story</h2>
-<div class="city-form">
-    <label for="cityName">City Name:</label>
-    <input type="text" id="cityName" [(ngModel)]="newCity.cityName" />
+<div class="story-form">
+    <label for="title">Title:</label>
+    <input type="text" id="title" [(ngModel)]="newStory.title" />
 
-    <label for="stateName">State Name:</label>
-    <input type="text" id="stateName" [(ngModel)]="newCity.stateName" />
+    <label for="description">Description:</label>
+    <input id="description" [(ngModel)]="newStory.description" />
 
-    <button (click)="createCity()">Create City</button>
+    <label for="department">Department:</label>
+    <input type="text" id="department" [(ngModel)]="newStory.department" />
+
+    <button (click)="createStory()">Create Story</button>
 
     <div *ngIf="successMessage" class="success-message">
         {{ successMessage }}

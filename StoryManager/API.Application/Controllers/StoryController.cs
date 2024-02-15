@@ -53,26 +53,26 @@ namespace API.Application.Controllers
         [HttpPost("stories")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<StoryView>> Create(string title, string description, string department)
+        public async Task<ActionResult> Create([FromBody] CreateStoryView storyView)
         {
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description) ||
-                string.IsNullOrWhiteSpace(department))
+            if (storyView == null || string.IsNullOrWhiteSpace(storyView.Title) ||
+                string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))
             {
                 return BadRequest();
             }
 
             StoryDTO storyDTO = new StoryDTO
             {
-                Title = title,
-                Description = description,
-                Department = department
+                Title = storyView.Title,
+                Description = storyView.Description,
+                Department = storyView.Department
             };
 
             await _storyService.Create(storyDTO);
 
-
-            return StatusCode(201, "Created");
+            return Created();
         }
+
 
         [HttpPut("stories/{id}")]
         [ProducesResponseType(typeof(StoryView), 200)]

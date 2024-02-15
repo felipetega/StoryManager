@@ -15,19 +15,19 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './create-story.component.css'
 })
 export class CreateStoryComponent {
-  newCity = { cityName: '', stateName: '' };
+  newStory = { title: '', description: '', department: '' };
   successMessage: string = '';
 
   constructor(private httpClient: HttpClient) {}
 
-  createCity() {
-    this.httpClient.post('/api', this.newCity).subscribe(
+  createStory() {
+    this.httpClient.post('https://localhost:7147/stories', this.newStory).subscribe(
       (response) => {
-        console.log('City created successfully:', response);
-        this.successMessage = 'City created successfully!';
+        console.log('Story created successfully:', response);
+        this.successMessage = 'Story created successfully!';
       },
       (error) => {
-        console.error('Error creating city:', error);
+        console.error('Error creating story:', error);
         this.successMessage = '';
       }
     );
