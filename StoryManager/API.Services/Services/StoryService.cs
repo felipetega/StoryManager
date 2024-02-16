@@ -62,52 +62,52 @@ namespace API.Services.Services
             return storyDTO;
         }
 
-        public async Task<StoryDTO> Update(StoryDTO storyDTO, int id)
+        public async Task<bool> Update(StoryDTO storyDTO, int id)
         {
-            Story storyById = await FindId(id);
-
-            if (storyById == null)
+            var storyId = _context.Stories.FirstOrDefault(x => x.Id == id);
+            if (storyId == null)
             {
-                throw new Exception("Story not found");
+                return false;
             }
 
-            storyById.Title = storyDTO.Title;
-            storyById.Description = storyDTO.Description;
-            storyById.Department = storyDTO.Department;
+            storyId.Title = storyDTO.Title;
+            storyId.Description = storyDTO.Description;
+            storyId.Department = storyDTO.Department;
 
-            _context.Stories.Update(storyById);
-            await _context.SaveChangesAsync();
-
-            var updatedStoryDTO = new StoryDTO
-            {
-                Id = storyById.Id,
-                Title = storyById.Title,
-                Description = storyById.Description,
-            };
-
-            return storyDTO;
-        }
-
-        public async Task<bool> Delete(int id)
-        {
-            Story storyById = await FindId(id);
-
-            if (storyById == null)
-            {
-                throw new Exception("Story not found");
-            }
-
-            _context.Stories.Remove(storyById);
+            _context.Stories.Update(storyId);
             await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<Story> FindId(int id)
+        //public async Task<bool> Delete(int id)
+        //{
+        //    var storyId = _context.Stories.FirstOrDefault(x => x.Id == id);
+
+        //    if (storyById == null)
+        //    {
+        //        throw new Exception("Story not found");
+        //    }
+
+        //    _context.Stories.Remove(storyById);
+        //    await _context.SaveChangesAsync();
+
+        //    return true;
+        //}
+
+        public async Task<bool> FindId(int id)
         {
-            return await _context.Stories.FirstOrDefaultAsync(x => x.Id == id);
+            var findId = await _context.Stories.FirstOrDefaultAsync(x => x.Id == id);
+            if(findId == null)
+            {
+                return false;
+            }
+            return true;
         }
 
-
+        public Task<bool> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

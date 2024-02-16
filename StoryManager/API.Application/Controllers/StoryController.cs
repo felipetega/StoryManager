@@ -75,13 +75,9 @@ namespace API.Application.Controllers
 
 
         [HttpPut("stories/{id}")]
-        [ProducesResponseType(typeof(StoryView), 200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        public async Task<ActionResult<StoryView>> Update(int id, string title, string description, string department)
+        public async Task<IActionResult> UpdateStory([FromBody] CreateStoryView storyView, int id)
         {
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(description) ||
-                string.IsNullOrWhiteSpace(department))
+            if (storyView.Title==null || storyView.Description==null || storyView.Department==null)
             {
                 return BadRequest("Invalid input. Title, Description, and Department are required.");
             }
@@ -89,26 +85,18 @@ namespace API.Application.Controllers
             StoryDTO storyDTO = new StoryDTO
             {
                 Id = id,
-                Title = title,
-                Description = description,
-                Department = department
+                Title = storyView.Title,
+                Description = storyView.Description,
+                Department = storyView.Department
             };
 
-            StoryDTO updatedStoryDTO = await _storyService.Update(storyDTO, id);
+            var updatedStoryDTO = await _storyService.Update(storyDTO, id);
 
-            if (updatedStoryDTO == null)
+            if (updatedStoryDTO == false)
             {
                 return NotFound();
             }
-
-            StoryView updatedStoryView = new StoryView
-            {
-                Title = title,
-                Description = description,
-                Department = department
-            };
-
-            return Ok(updatedStoryView);
+            return Ok();
         }
 
 

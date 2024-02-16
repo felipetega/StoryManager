@@ -26,24 +26,27 @@ interface UpdatedStory {
 })
 export class UpdateStoryComponent {
   storyId: number = 0;
-  updatedStory: UpdatedStory = { storyId: 0, title: '', description: '', department: '' };
+  updatedStory = { storyId: 0, title: '', description: '', department: '' };
   successMessage: string = '';
 
   constructor(private httpClient: HttpClient) {}
 
   updateStory() {
-    if (this.storyId <= 0) {
+    console.log(this.updatedStory.storyId)
+    if (this.storyId < 0) {
       console.error("Invalid input. StoryId is required.");
       return;
     }
 
-    this.httpClient.put<UpdatedStory>(`https://localhost:7147/stories/${this.storyId}`, this.updatedStory)
+
+    this.httpClient.put(`https://localhost:7147/stories/${this.updatedStory.storyId}`, this.updatedStory)
       .subscribe(
         (response) => {
           console.log('Story updated successfully:', response);
           this.successMessage = 'Story updated successfully!';
         },
         (error) => {
+          console.log(this.updatedStory)
           console.error('Error updating story:', error);
           this.successMessage = '';
         }
