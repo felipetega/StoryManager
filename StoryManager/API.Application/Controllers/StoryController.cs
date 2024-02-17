@@ -80,9 +80,10 @@ namespace API.Application.Controllers
         [HttpPut("stories/{id}")]
         public async Task<IActionResult> UpdateStory([FromBody] CreateStoryView storyView, int id)
         {
-            if (storyView.Title==null || storyView.Description==null || storyView.Department==null)
+            if (storyView == null || string.IsNullOrWhiteSpace(storyView.Title) ||
+                string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))
             {
-                return BadRequest("Invalid input. Title, Description, and Department are required.");
+                return BadRequest();
             }
 
             StoryDTO storyDTO = new StoryDTO

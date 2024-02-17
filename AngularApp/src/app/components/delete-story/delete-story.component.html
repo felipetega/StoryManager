@@ -1,1 +1,12 @@
-<p>delete-story works!</p>
+<h2>Delete Story</h2>
+<div class="story-form">
+    <label for="user">Story ID</label>
+    <input type="text" [(ngModel)]="storyId">
+    
+    <button (click)="deleteStory()">Delete Story</button>
+
+    <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+        <button (click)="closeSuccessMessage()">Close</button>
+    </div>
+</div>

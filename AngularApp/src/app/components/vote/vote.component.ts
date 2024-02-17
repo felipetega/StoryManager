@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -27,14 +27,15 @@ export class VoteComponent implements OnInit {
 
   fetchData() {
     this.httpClient.get("https://localhost:7147/stories").subscribe((data: any) => {
-      console.log(data);
+      // console.log(data);
       this.data = data;
     });
   }
 
   vote(storyId: number, voteValue: boolean) {
-    if (this.userId <= 0 || storyId <= 0) { // Check if userId and storyId are valid
-      console.error("Invalid input. UserId and StoryId are required.");
+    if (this.userId <= 0) {
+      console.error("UserId is required.");
+      alert("UserId is required.");
       return;
     }
 
@@ -44,9 +45,27 @@ export class VoteComponent implements OnInit {
       voteValue: voteValue
     };
 
-    this.httpClient.post("https://localhost:7147/votes", votePayload).subscribe((response: any) => {
-      console.log(response);
-    });
+    this.httpClient.post("https://localhost:7147/votes", votePayload).subscribe(
+      (response: any) => {
+        if (response==null) {
+          this.fetchData();
+        }
+      },
+      (error: any) => {
+        console.error(error);
+    
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 404) {
+            alert(`Error ${error.status}: Not Found - User ID don't exist.`);
+          } else if (error.status === 400) {
+            alert(`Error ${error.status}: Bad Request - Invalid input.`);
+          } else {
+            alert(`An error occurred: ${error.status}`);
+          }
+        }
+      }
+    );
+    
   }
 
   calculateVoteBalance(votes: any[]): number {

@@ -32,8 +32,17 @@ namespace API.Services.Services
                 .ToListAsync();
         }
 
-        public async Task<VoteDTO> Create(VoteDTO voteDTO)
+        public async Task<bool> Create(VoteDTO voteDTO)
         {
+
+            var storyId = _context.Stories.FirstOrDefault(x => x.Id == voteDTO.StoryId);
+            var userId = _context.Users.FirstOrDefault(x => x.Id == voteDTO.UserId);
+
+            if (storyId == null || userId == null)
+            {
+                return false;
+            }
+
             var vote = new Vote
             {
                 UserId = voteDTO.UserId,
@@ -44,7 +53,7 @@ namespace API.Services.Services
             await _context.Votes.AddAsync(vote);
             await _context.SaveChangesAsync();
 
-            return voteDTO;
+            return true;
         }
 
         public async Task<VoteDTO> Update(VoteDTO voteDTO, int id)
@@ -80,7 +89,7 @@ namespace API.Services.Services
 
             if (voteById == null)
             {
-                throw new Exception("Vote not found");
+                return false;
             }
 
             _context.Votes.Remove(voteById);

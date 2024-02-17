@@ -1,5 +1,7 @@
-﻿using API.Application.ViewModel;
+﻿using API.Application.ModelView;
+using API.Application.ViewModel;
 using API.Services.DTOs;
+using API.Services.Services;
 using API.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,16 +40,29 @@ namespace API.Application.Controllers
         [HttpPost("votes")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<VoteView>> Create([FromBody] VoteDTO voteDTO)
+        [ProducesResponseType(404)]
+        public async Task<ActionResult> Create([FromBody] CreateVoteView createVoteView)
         {
-            if (voteDTO.UserId <= 0 || voteDTO.StoryId <= 0)
+            if (createVoteView == null || createVoteView.UserId <= 0 || createVoteView.StoryId <= 0 || createVoteView.UserId is string)
             {
                 return BadRequest("Invalid input. UserId and StoryId are required.");
             }
 
-            await _voteService.Create(voteDTO);
+            VoteDTO voteDTO = new VoteDTO
+            {
+                StoryId = createVoteView.StoryId,
+                UserId = createVoteView.UserId,
+                VoteValue = createVoteView.VoteValue,
+            };
 
-            return Created();
+            var createdVote = await _voteService.Create(voteDTO);
+
+            if (createdVote == false)
+            {
+                return NotFound();
+            }
+
+            return StatusCode(201);
         }
 
 

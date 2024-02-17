@@ -1,6 +1,6 @@
 // import necessary modules and components
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -26,31 +26,42 @@ interface UpdatedStory {
 })
 export class UpdateStoryComponent {
   storyId: number = 0;
-  updatedStory = { storyId: 0, title: '', description: '', department: '' };
+  updatedStory = { title: '', description: '', department: '' };
   successMessage: string = '';
 
   constructor(private httpClient: HttpClient) {}
 
   updateStory() {
-    console.log(this.updatedStory.storyId)
-    if (this.storyId < 0) {
-      console.error("Invalid input. StoryId is required.");
+    console.log(this.storyId)
+    if (this.storyId <= 0) {
+      alert("Invalid input. StoryId is required.");
       return;
     }
 
 
-    this.httpClient.put(`https://localhost:7147/stories/${this.updatedStory.storyId}`, this.updatedStory)
-      .subscribe(
-        (response) => {
+    this.httpClient.put(`https://localhost:7147/stories/${this.storyId}`, this.updatedStory)
+    .subscribe(
+      (response: any) => {
+        if (response==null) {
           console.log('Story updated successfully:', response);
           this.successMessage = 'Story updated successfully!';
-        },
-        (error) => {
-          console.log(this.updatedStory)
-          console.error('Error updating story:', error);
-          this.successMessage = '';
         }
-      );
+      },
+      (error: any) => {
+        console.error('Error updating story:', error);
+
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 400) {
+            alert(`Error ${error.status}: Bad Request - Invalid input`);
+          } else if (error.status === 404) {
+            alert(`Error ${error.status}: Not Found - Story ID don't exist`);
+          } else {
+            alert(`An unexpected error occurred: ${error.status}`);
+          }
+        }
+      }
+    );
+
   }
 
   closeSuccessMessage() {
