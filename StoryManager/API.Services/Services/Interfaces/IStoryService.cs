@@ -10,7 +10,7 @@ namespace API.Services.Services.Interfaces
     public interface IStoryService
     {
         Task<List<StoryDTO>> GetAll();
-        Task<StoryDTO> Create(StoryDTO storyDTO);
+        Task<bool> Create(StoryDTO storyDTO);
         Task<bool> Update(StoryDTO storyDTO, int id);
         Task<bool> Delete(int id);
     }

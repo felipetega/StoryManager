@@ -11,7 +11,7 @@ namespace API.Services.Services.Interfaces
     {
         Task<List<UserDTO>> GetAll();
         Task<UserDTO> Create(UserDTO userDTO);
-        Task<UserDTO> Update(UserDTO userDTO, int id);
+        Task<bool> Update(UserDTO userDTO, int id);
         Task<bool> Delete(int id);
     }
 }

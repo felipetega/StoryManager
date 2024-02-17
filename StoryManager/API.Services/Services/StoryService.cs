@@ -47,7 +47,7 @@ namespace API.Services.Services
 
 
 
-        public async Task<StoryDTO> Create(StoryDTO storyDTO)
+        public async Task<bool> Create(StoryDTO storyDTO)
         {
             var story = new Story
             {
@@ -59,7 +59,7 @@ namespace API.Services.Services
             await _context.Stories.AddAsync(story);
             await _context.SaveChangesAsync();
 
-            return storyDTO;
+            return true;
         }
 
         public async Task<bool> Update(StoryDTO storyDTO, int id)
@@ -80,20 +80,20 @@ namespace API.Services.Services
             return true;
         }
 
-        //public async Task<bool> Delete(int id)
-        //{
-        //    var storyId = _context.Stories.FirstOrDefault(x => x.Id == id);
+        public async Task<bool> Delete(int id)
+        {
+            var storyId = _context.Stories.FirstOrDefault(x => x.Id == id);
 
-        //    if (storyById == null)
-        //    {
-        //        throw new Exception("Story not found");
-        //    }
+            if (storyId == null)
+            {
+                return false;
+            }
 
-        //    _context.Stories.Remove(storyById);
-        //    await _context.SaveChangesAsync();
+            _context.Stories.Remove(storyId);
+            await _context.SaveChangesAsync();
 
-        //    return true;
-        //}
+            return true;
+        }
 
         public async Task<bool> FindId(int id)
         {
@@ -105,9 +105,9 @@ namespace API.Services.Services
             return true;
         }
 
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<bool> Delete(int id)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

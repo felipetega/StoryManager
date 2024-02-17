@@ -48,13 +48,13 @@ namespace API.Services.Services
             return userDTO;
         }
 
-        public async Task<UserDTO> Update(UserDTO userDTO, int id)
+        public async Task<bool> Update(UserDTO userDTO, int id)
         {
             User userById = await FindId(id);
 
             if (userById == null)
             {
-                throw new Exception("User not found");
+                return false;
             }
 
             userById.Name = userDTO.Name;
@@ -62,13 +62,9 @@ namespace API.Services.Services
             _context.Users.Update(userById);
             await _context.SaveChangesAsync();
 
-            var updatedUserDTO = new UserDTO
-            {
-                Id = userById.Id,
-                Name = userById.Name,
-            };
 
-            return updatedUserDTO;
+
+            return true;
         }
 
         public async Task<bool> Delete(int id)
@@ -77,7 +73,7 @@ namespace API.Services.Services
 
             if (userById == null)
             {
-                throw new Exception("User not found");
+                return false;
             }
 
             _context.Users.Remove(userById);

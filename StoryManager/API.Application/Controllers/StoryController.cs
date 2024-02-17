@@ -70,10 +70,13 @@ namespace API.Application.Controllers
 
             await _storyService.Create(storyDTO);
 
-            return Created();
+            return StatusCode(201);
         }
 
 
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         [HttpPut("stories/{id}")]
         public async Task<IActionResult> UpdateStory([FromBody] CreateStoryView storyView, int id)
         {
@@ -101,7 +104,7 @@ namespace API.Application.Controllers
 
 
         [HttpDelete("stories/{id}")]
-        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoryView>> Delete(int id)
         {
@@ -112,7 +115,7 @@ namespace API.Application.Controllers
                 return NotFound();
             }
 
-            return Ok(deleted);
+            return Ok();
         }
     }
 }

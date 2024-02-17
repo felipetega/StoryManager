@@ -52,14 +52,14 @@ namespace API.Application.Controllers
 
             await _userService.Create(userDTO);
 
-            return Ok();
+            return StatusCode(201);
         }
 
         [HttpPut("users/{id}")]
-        [ProducesResponseType(typeof(UserView), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<UserView>> Update(int id, string name)
+        public async Task<ActionResult> Update(int id, string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -72,19 +72,15 @@ namespace API.Application.Controllers
                 Name = name
             };
 
-            UserDTO updatedUserDTO = await _userService.Update(userDTO, id);
+            bool updatedUser = await _userService.Update(userDTO, id);
 
-            if (updatedUserDTO == null)
+            if (!updatedUser)
             {
                 return NotFound();
             }
 
-            UserView updatedUserView = new UserView
-            {
-                Name = name
-            };
 
-            return Ok(updatedUserView);
+            return Ok();
         }
 
         [HttpDelete("users/{id}")]
