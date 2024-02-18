@@ -11,7 +11,7 @@ namespace API.Services.Services.Interfaces
     {
         Task<List<VoteDTO>> GetAll();
         Task<bool> Create(VoteDTO storyDTO);
-        Task<VoteDTO> Update(VoteDTO storyDTO, int id);
+        Task<bool> Update(VoteDTO storyDTO, int id);
         Task<bool> Delete(int id);
     }
 }

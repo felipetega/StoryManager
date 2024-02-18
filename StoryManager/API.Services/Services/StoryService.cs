@@ -64,7 +64,7 @@ namespace API.Services.Services
 
         public async Task<bool> Update(StoryDTO storyDTO, int id)
         {
-            var storyId = _context.Stories.FirstOrDefault(x => x.Id == id);
+            var storyId = await _context.Stories.FirstOrDefaultAsync(x => x.Id == id);
             if (storyId == null)
             {
                 return false;
@@ -95,19 +95,5 @@ namespace API.Services.Services
             return true;
         }
 
-        public async Task<bool> FindId(int id)
-        {
-            var findId = await _context.Stories.FirstOrDefaultAsync(x => x.Id == id);
-            if(findId == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        //public Task<bool> Delete(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

@@ -35,7 +35,7 @@ namespace API.Application.Controllers
                     User = new UserView()
                     {
                         Name = y.User.Name,
-                    }
+                    },
                 })
             }).ToList();
             if (storyViewModel.Count == 0)

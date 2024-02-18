@@ -85,7 +85,7 @@ namespace API.Application.Controllers
                 VoteValue = voteValue
             };
 
-            VoteDTO updatedVoteDTO = await _voteService.Update(voteDTO, id);
+            var updatedVoteDTO = await _voteService.Update(voteDTO, id);
 
             if (updatedVoteDTO == null)
             {

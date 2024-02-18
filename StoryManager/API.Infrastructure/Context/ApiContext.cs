@@ -40,12 +40,12 @@ namespace API.Infrastructure.Context
 
             modelBuilder.Entity<Story>().Property(p => p.Department).IsRequired().HasMaxLength(25);
 
-            // Configuração da tabela VOTE
+            // VOTE
             modelBuilder.Entity<Vote>().HasKey(p => p.Id);
             modelBuilder.Entity<Vote>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
             modelBuilder.Entity<Vote>().Property(p => p.VoteValue).IsRequired();
 
-            // Relacionamentos
+            // RELATIONS
             modelBuilder.Entity<Vote>()
                 .HasOne(vote => vote.User)
                 .WithMany(user => user.Votes)

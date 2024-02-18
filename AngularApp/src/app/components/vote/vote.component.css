@@ -27,6 +27,12 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: lightgray; /* Light bisque color */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.story-card:hover {
+  transform: translate(1px, 1px); /* Move card to the right and down on hover */
 }
 
 .story-card h2 {

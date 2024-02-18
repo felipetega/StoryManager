@@ -35,7 +35,7 @@ namespace API.Services.Services
                 .ToListAsync();
         }
 
-        public async Task<UserDTO> Create(UserDTO userDTO)
+        public async Task<bool> Create(UserDTO userDTO)
         {
             var user = new User
             {
@@ -45,21 +45,21 @@ namespace API.Services.Services
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            return userDTO;
+            return true;
         }
 
         public async Task<bool> Update(UserDTO userDTO, int id)
         {
-            User userById = await FindId(id);
+            var userId = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (userById == null)
+            if (userId == null)
             {
                 return false;
             }
 
-            userById.Name = userDTO.Name;
+            userId.Name = userDTO.Name;
 
-            _context.Users.Update(userById);
+            _context.Users.Update(userId);
             await _context.SaveChangesAsync();
 
 
@@ -69,22 +69,18 @@ namespace API.Services.Services
 
         public async Task<bool> Delete(int id)
         {
-            User userById = await FindId(id);
+            var userId = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (userById == null)
+            if (userId == null)
             {
                 return false;
             }
 
-            _context.Users.Remove(userById);
+            _context.Users.Remove(userId);
             await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<User> FindId(int id)
-        {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-        }
     }
 }

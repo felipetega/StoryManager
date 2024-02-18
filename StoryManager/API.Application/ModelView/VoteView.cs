@@ -7,6 +7,5 @@ namespace API.Application.ViewModel
 
         public bool VoteValue { get; set; }
         public UserView User { get; set; }
-        public StoryView Story { get; set; }
     }
 }

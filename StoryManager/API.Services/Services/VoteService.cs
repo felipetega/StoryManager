@@ -56,13 +56,13 @@ namespace API.Services.Services
             return true;
         }
 
-        public async Task<VoteDTO> Update(VoteDTO voteDTO, int id)
+        public async Task<bool> Update(VoteDTO voteDTO, int id)
         {
-            Vote voteById = await FindId(id);
+            var voteById = await _context.Votes.FirstOrDefaultAsync(x => x.Id == id);
 
             if (voteById == null)
             {
-                throw new Exception("Vote not found");
+                return false;
             }
 
             voteById.UserId = voteDTO.UserId;
@@ -80,27 +80,24 @@ namespace API.Services.Services
                 VoteValue = voteById.VoteValue,
             };
 
-            return updatedVoteDTO;
+            return true;
         }
 
         public async Task<bool> Delete(int id)
         {
-            Vote voteById = await FindId(id);
+            var voteId = await _context.Votes.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (voteById == null)
+            if (voteId == null)
             {
                 return false;
             }
 
-            _context.Votes.Remove(voteById);
+            _context.Votes.Remove(voteId);
             await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<Vote> FindId(int id)
-        {
-            return await _context.Votes.FirstOrDefaultAsync(x => x.Id == id);
-        }
+
     }
 }
