@@ -78,7 +78,7 @@ namespace API.Application.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [HttpPut("stories/{id}")]
-        public async Task<IActionResult> UpdateStory([FromBody] CreateStoryView storyView, int id)
+        public async Task<IActionResult> Update([FromBody] CreateStoryView storyView, int id)
         {
             if (storyView == null || string.IsNullOrWhiteSpace(storyView.Title) ||
                 string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))

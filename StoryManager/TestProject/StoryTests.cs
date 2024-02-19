@@ -156,7 +156,7 @@ namespace TestProject
                             .ReturnsAsync(true);
 
             // Act
-            var result = await storyController.UpdateStory(storyView, id);
+            var result = await storyController.Update(storyView, id);
 
             // Assert
             var okObjectResult = Assert.IsType<OkResult>(result);
@@ -187,7 +187,7 @@ namespace TestProject
                             .ReturnsAsync(false);
 
             // Act
-            var result = await storyController.UpdateStory(storyView, id);
+            var result = await storyController.Update(storyView, id);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -213,7 +213,7 @@ namespace TestProject
             };
 
             // Act
-            var result = await storyController.UpdateStory(storyView, id);
+            var result = await storyController.Update(storyView, id);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);
