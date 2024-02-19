@@ -45,7 +45,7 @@ namespace API.Application.Controllers
         {
             if (createVoteView == null || createVoteView.UserId <= 0 || createVoteView.StoryId <= 0 || createVoteView.UserId is string)
             {
-                return BadRequest("Invalid input. UserId and StoryId are required.");
+                return BadRequest();
             }
 
             VoteDTO voteDTO = new VoteDTO
@@ -70,34 +70,29 @@ namespace API.Application.Controllers
         [ProducesResponseType(typeof(VoteView), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<VoteView>> Update(int id, int userId, int storyId, bool voteValue)
+        public async Task<ActionResult> Update([FromBody] CreateVoteView voteView, int id)
         {
-            if (id<0)
+            if (id<0 || voteView.UserId<0 || voteView.StoryId<0 || !(voteView.VoteValue is bool))
             {
-                return BadRequest("Invalid input. VoteValue must be greater than zero.");
+                return BadRequest();
             }
 
             VoteDTO voteDTO = new VoteDTO
             {
                 Id = id,
-                UserId = userId,
-                StoryId = storyId,
-                VoteValue = voteValue
+                UserId = voteView.UserId,
+                StoryId = voteView.StoryId,
+                VoteValue = voteView.VoteValue
             };
 
             var updatedVoteDTO = await _voteService.Update(voteDTO, id);
 
-            if (updatedVoteDTO == null)
+            if (updatedVoteDTO == false)
             {
                 return NotFound();
             }
 
-            VoteView updatedVoteView = new VoteView
-            {
-                VoteValue = voteValue
-            };
-
-            return Ok(updatedVoteView);
+            return Ok();
         }
 
         [HttpDelete("votes/{id}")]

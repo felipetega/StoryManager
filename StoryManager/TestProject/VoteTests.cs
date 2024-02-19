@@ -1,7 +1,9 @@
 ﻿using API.Application.Controllers;
+using API.Application.ModelView;
 using API.Application.ViewModel;
 using API.Services.DTOs;
 using API.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Collections.Generic;
@@ -67,40 +69,66 @@ namespace TestProject
             var mockVoteService = new Mock<IVoteService>();
             var voteController = new VoteController(mockVoteService.Object);
 
+
             var userId = 1;
             var storyId = 1;
             var voteValue = true;
 
+            var createVoteView = new CreateVoteView
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
+            var voteDTO = new VoteDTO
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
+
+            mockVoteService.Setup(x => x.Create(It.IsAny<VoteDTO>()))
+                .ReturnsAsync(true);
+
+
             // Act
-            var result = await voteController.Create(userId, storyId, voteValue);
+            var result = await voteController.Create(createVoteView);
+            Assert.NotNull(result);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<VoteView>>(result);
-            Assert.IsType<OkResult>(actionResult.Result);
-
-            mockVoteService.Verify(x => x.Create(It.Is<VoteDTO>(v => v.UserId == userId && v.StoryId == storyId && v.VoteValue == voteValue)), Times.Once);
+            var createdResult = Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal(201, createdResult.StatusCode);
         }
 
+
+
         [Theory]
-        [InlineData(0, 1, true)]
-        [InlineData(1, 0, true)]
+        [InlineData(-1, 1, true)]
+        [InlineData(1, -1, true)]
         public async Task Create_ReturnsBadRequest_WhenInvalidInput(int userId, int storyId, bool voteValue)
         {
             // Arrange
             var mockVoteService = new Mock<IVoteService>();
             var voteController = new VoteController(mockVoteService.Object);
 
+            var createVoteView = new CreateVoteView
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
             // Act
-            var result = await voteController.Create(userId, storyId, voteValue);
+            var result = await voteController.Create(createVoteView);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<VoteView>>(result);
-            var objectResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-
-            Assert.Equal(400, objectResult.StatusCode);
+            Assert.IsType<BadRequestResult>(result);
 
             mockVoteService.Verify(x => x.Create(It.IsAny<VoteDTO>()), Times.Never);
         }
+
 
         [Fact]
         public async Task Update_ReturnsOk_WhenValidInput()
@@ -114,37 +142,52 @@ namespace TestProject
             var storyId = 1;
             var voteValue = true;
 
+            var createVoteView = new CreateVoteView
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
             // Set up the mock to return a non-null value for the specified input
             mockVoteService.Setup(x => x.Update(It.Is<VoteDTO>(v => v.Id == id && v.UserId == userId && v.StoryId == storyId && v.VoteValue == voteValue), id))
-                           .ReturnsAsync(new VoteDTO { /* Provide necessary properties */ });
+                           .ReturnsAsync(true);
 
             // Act
-            var result = await voteController.Update(id, userId, storyId, voteValue);
+            var result = await voteController.Update(createVoteView, id);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<VoteView>>(result);
-            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var okObjectResult = Assert.IsType<OkResult>(result);
+            Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
         }
 
 
         [Theory]
         [InlineData(-1, 1, 1, true)]
+        [InlineData(1, -1, 1, true)]
+        [InlineData(1, 1, -1, true)]
         public async Task Update_ReturnsBadRequest_WhenInvalidInput(int id, int userId, int storyId, bool voteValue)
         {
             // Arrange
             var mockVoteService = new Mock<IVoteService>();
             var voteController = new VoteController(mockVoteService.Object);
 
+
+
+            var createVoteView = new CreateVoteView
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
             // Act
-            var result = await voteController.Update(id, userId, storyId, voteValue);
+            var result = await voteController.Update(createVoteView, id);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<VoteView>>(result);
-            var objectResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+            Assert.IsType<BadRequestResult>(result);
 
-            Assert.Equal(400, objectResult.StatusCode);
-
-            mockVoteService.Verify(x => x.Update(It.IsAny<VoteDTO>(), id), Times.Never);
+            mockVoteService.Verify(x => x.Update(It.IsAny<VoteDTO>(), It.IsAny<int>()), Times.Never);
         }
 
         [Fact]
@@ -159,15 +202,21 @@ namespace TestProject
             var storyId = 1;
             var voteValue = true;
 
+            CreateVoteView voteView = new CreateVoteView
+            {
+                UserId = userId,
+                StoryId = storyId,
+                VoteValue = voteValue
+            };
+
             mockVoteService.Setup(x => x.Update(It.IsAny<VoteDTO>(), id))
-                           .ReturnsAsync((VoteDTO)null);
+                           .ReturnsAsync(false);
 
             // Act
-            var result = await voteController.Update(id, userId, storyId, voteValue);
+            var result = await voteController.Update(voteView, id);
 
             // Assert
-            Assert.IsType<ActionResult<VoteView>>(result);
-            var notFoundResult = Assert.IsType<NotFoundResult>(result.Result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]

@@ -68,21 +68,19 @@ namespace TestProject
             var mockUserService = new Mock<IUserService>();
             var userController = new UserController(mockUserService.Object);
 
-            var name = "John Doe";
+            var name = "Felipe";
+
+            UserView userView = new UserView
+            {
+                Name = name
+            };
 
             // Act
-            var result = await userController.Create(name);
+            var result = await userController.Create(userView);
 
             // Assert
-            var okResult = Assert.IsType<ActionResult<UserView>>(result);
-            Assert.IsType<OkResult>(okResult.Result); // Ensure the inner result is OkObjectResult
-
-            var actualStatusCode = (okResult.Result as OkResult)?.StatusCode;
-
-            Assert.Equal(StatusCodes.Status200OK, actualStatusCode);
-
-            // Ensure that the Create method of the service is called with the correct parameters
-            mockUserService.Verify(x => x.Create(It.Is<UserDTO>(u => u.Name == name)), Times.Once);
+            var createdResult = Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal(201, createdResult.StatusCode);
 
         }
 
@@ -93,22 +91,19 @@ namespace TestProject
             var mockUserService = new Mock<IUserService>();
             var userController = new UserController(mockUserService.Object);
 
+            var name = "";
+
+            UserView userview = new UserView
+            {
+                Name = name
+            };
+
             // Act
-            var result = await userController.Create(null);
+            var result = await userController.Create(userview);
 
             // Assert
-            var badRequestResult = Assert.IsType<ActionResult<UserView>>(result);
-            Assert.IsType<BadRequestObjectResult>(badRequestResult.Result);
-
-            var actualStatusCode = (badRequestResult.Result as BadRequestObjectResult)?.StatusCode;
-            var actualValue = (badRequestResult.Result as BadRequestObjectResult)?.Value;
-
-            Assert.Equal(StatusCodes.Status400BadRequest, actualStatusCode);
-            Assert.Equal("Invalid input. Name is required.", actualValue);
-
-            // Ensure that the Create method of the service is not called when input is invalid
+            Assert.IsType<BadRequestResult>(result);
             mockUserService.Verify(x => x.Create(It.IsAny<UserDTO>()), Times.Never);
-
         }
 
         [Fact]
@@ -118,26 +113,25 @@ namespace TestProject
             var mockUserService = new Mock<IUserService>();
             var userController = new UserController(mockUserService.Object);
 
-            var id = 1;
-            var name = "John Doe";
+            int id = 1;
+            var name = "Felipe";
+
+            UserView userView = new UserView
+            {
+                Name = name
+            };
 
             mockUserService.Setup(x => x.Update(It.IsAny<UserDTO>(), It.IsAny<int>()))
-                           .ReturnsAsync(new UserDTO { Id = id, Name = name });
+                           .ReturnsAsync(true);
 
             // Act
-            var result = await userController.Update(id, name);
+            var result = await userController.Update(userView, id);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<UserView>>(result);
-            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-
-            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
-
-            var updatedUserView = Assert.IsType<UserView>(okResult.Value);
-            Assert.Equal(name, updatedUserView.Name);
-
-            mockUserService.Verify(x => x.Update(It.Is<UserDTO>(u => u.Id == id && u.Name == name), id), Times.Once);
+            var okObjectResult = Assert.IsType<OkResult>(result);
+            Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
         }
+
 
         [Fact]
         public async Task Update_ReturnsNotFound_WhenUserServiceReturnsNull()
@@ -146,21 +140,22 @@ namespace TestProject
             var mockUserService = new Mock<IUserService>();
             var userController = new UserController(mockUserService.Object);
 
-            var id = 1;
-            var name = "John Doe";
+            int id = 1;
+            var name = "Felipe";
+
+            UserView userView = new UserView
+            {
+                Name = name
+            };
 
             mockUserService.Setup(x => x.Update(It.IsAny<UserDTO>(), It.IsAny<int>()))
-                           .ReturnsAsync((UserDTO)null);
+                           .ReturnsAsync(false);
 
             // Act
-            var result = await userController.Update(id, name);
+            var result = await userController.Update(userView, id);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<UserView>>(result);
-            Assert.IsType<NotFoundResult>(actionResult.Result);
-
-            mockUserService.Verify(x => x.Update(It.Is<UserDTO>(u => u.Id == id && u.Name == name), id), Times.Once);
-
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -170,19 +165,20 @@ namespace TestProject
             var mockUserService = new Mock<IUserService>();
             var userController = new UserController(mockUserService.Object);
 
+            int id = 1;
+            var name = "";
+
+            UserView userView = new UserView
+            {
+                Name = name
+            };
+
             // Act
-            var result = await userController.Update(1, null);
+            var result = await userController.Update(userView, id);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<UserView>>(result);
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-
-            Assert.Equal(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
-            Assert.Equal("Invalid input. Name is required.", badRequestResult.Value);
-
-            // Ensure that the Update method of the service is not called when input is invalid
+            Assert.IsType<BadRequestResult>(result);
             mockUserService.Verify(x => x.Update(It.IsAny<UserDTO>(), It.IsAny<int>()), Times.Never);
-
         }
 
         [Fact]

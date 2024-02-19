@@ -38,16 +38,16 @@ namespace API.Application.Controllers
         [HttpPost("users")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<UserView>> Create(string name)
+        public async Task<ActionResult> Create([FromBody] UserView userView)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(userView.Name))
             {
-                return BadRequest("Invalid input. Name is required.");
+                return BadRequest();
             }
 
             UserDTO userDTO = new UserDTO
             {
-                Name = name
+                Name = userView.Name
             };
 
             await _userService.Create(userDTO);
@@ -59,17 +59,17 @@ namespace API.Application.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> Update(int id, string name)
+        public async Task<ActionResult> Update([FromBody] UserView userView, int id)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(userView.Name))
             {
-                return BadRequest("Invalid input. Name is required.");
+                return BadRequest();
             }
 
             UserDTO userDTO = new UserDTO
             {
                 Id = id,
-                Name = name
+                Name = userView.Name
             };
 
             bool updatedUser = await _userService.Update(userDTO, id);

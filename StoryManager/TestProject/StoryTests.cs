@@ -100,12 +100,10 @@ namespace TestProject
             var result = await storyController.Create(storyView);
 
             // Assert
-            var createdResult = Assert.IsType<ObjectResult>(result.Result);
+            var createdResult = Assert.IsType<StatusCodeResult>(result);
             Assert.Equal(201, createdResult.StatusCode);
-            Assert.Equal("Created", createdResult.Value);
-
-            // You can also assert other properties of the ObjectResult if needed.
         }
+
 
 
         [Fact]
@@ -115,13 +113,23 @@ namespace TestProject
             var mockStoryService = new Mock<IStoryService>();
             var storyController = new StoryController(mockStoryService.Object);
 
+            var title = "Updated Title";
+            var description = "Updated Description";
+            var department = "";
+
+            var storyView = new CreateStoryView
+            {
+                Title = title,
+                Description = description,
+                Department = department
+            };
+
             // Act
-            var result = await storyController.Create(null, "Sample description", "IT");
+            var result = await storyController.Create(storyView);
 
             // Assert
-            Assert.IsType<BadRequestResult>(result.Result);
+            Assert.IsType<BadRequestResult>(result);
 
-            // Ensure that the Create method of the service is not called when input is invalid
             mockStoryService.Verify(x => x.Create(It.IsAny<StoryDTO>()), Times.Never);
         }
 
@@ -137,28 +145,23 @@ namespace TestProject
             var description = "Updated Description";
             var department = "Updated Department";
 
-            var updatedStoryDTO = new StoryDTO
+            var storyView = new CreateStoryView
             {
-                Id = id,
                 Title = title,
                 Description = description,
                 Department = department
             };
 
             mockStoryService.Setup(x => x.Update(It.IsAny<StoryDTO>(), id))
-                            .ReturnsAsync(updatedStoryDTO);
+                            .ReturnsAsync(true);
 
             // Act
-            var result = await storyController.Update(id, title, description, department);
+            var result = await storyController.UpdateStory(storyView, id);
 
             // Assert
-            var okObjectResult = Assert.IsType<OkObjectResult>(result.Result);
-            var updatedStoryView = Assert.IsType<StoryView>(okObjectResult.Value);
+            var okObjectResult = Assert.IsType<OkResult>(result);
 
             Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
-            Assert.Equal(title, updatedStoryView.Title);
-            Assert.Equal(description, updatedStoryView.Description);
-            Assert.Equal(department, updatedStoryView.Department);
         }
 
         [Fact]
@@ -169,15 +172,25 @@ namespace TestProject
             var storyController = new StoryController(mockStoryService.Object);
 
             var id = 1;
+            var title = "Updated Title";
+            var description = "Updated Description";
+            var department = "Updated Department";
+
+            var storyView = new CreateStoryView
+            {
+                Title = title,
+                Description = description,
+                Department = department
+            };
 
             mockStoryService.Setup(x => x.Update(It.IsAny<StoryDTO>(), id))
-                            .ReturnsAsync((StoryDTO)null);
+                            .ReturnsAsync(false);
 
             // Act
-            var result = await storyController.Update(id, "Updated Title", "Updated Description", "Updated Department");
+            var result = await storyController.UpdateStory(storyView, id);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result.Result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -187,11 +200,23 @@ namespace TestProject
             var mockStoryService = new Mock<IStoryService>();
             var storyController = new StoryController(mockStoryService.Object);
 
+            var id = 1;
+            var title = "Updated Title";
+            var description = "Updated Description";
+            var department = "";
+
+            var storyView = new CreateStoryView
+            {
+                Title = title,
+                Description = description,
+                Department = department
+            };
+
             // Act
-            var result = await storyController.Update(1, null, "Updated Description", "Updated Department");
+            var result = await storyController.UpdateStory(storyView, id);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(result.Result);
+            Assert.IsType<BadRequestResult>(result);
 
             // Ensure that the Update method of the service is not called when input is invalid
             mockStoryService.Verify(x => x.Update(It.IsAny<StoryDTO>(), It.IsAny<int>()), Times.Never);
@@ -212,11 +237,9 @@ namespace TestProject
             var result = await storyController.Delete(id);
 
             // Assert
-            var okObjectResult = Assert.IsType<OkObjectResult>(result.Result);
-            var deleted = Assert.IsType<bool>(okObjectResult.Value);
+            var okResult = Assert.IsType<OkResult>(result.Result);
 
-            Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
-            Assert.True(deleted);
+            Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
         }
 
         [Fact]
