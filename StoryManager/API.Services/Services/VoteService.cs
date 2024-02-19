@@ -35,8 +35,8 @@ namespace API.Services.Services
         public async Task<bool> Create(VoteDTO voteDTO)
         {
 
-            var storyId = _context.Stories.FirstOrDefaultAsync(x => x.Id == voteDTO.StoryId);
-            var userId = _context.Users.FirstOrDefaultAsync(x => x.Id == voteDTO.UserId);
+            var storyId = await _context.Stories.FirstOrDefaultAsync(x => x.Id == voteDTO.StoryId);
+            var userId = await _context.Users.FirstOrDefaultAsync(x => x.Id == voteDTO.UserId);
 
             if (storyId == null || userId == null)
             {
