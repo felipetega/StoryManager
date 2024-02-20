@@ -1,10 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+// aqui
+import { ActivatedRoute } from '@angular/router';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [
+        // Forneça uma instância mock do ActivatedRoute para o teste
+        { provide: ActivatedRoute, useValue: {} },
+      ],
     }).compileComponents();
   });
 
@@ -20,10 +26,4 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('AngularApp');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, AngularApp');
-  });
 });

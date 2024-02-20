@@ -20,4 +20,16 @@ describe('UpdateStoryComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize storyId, updatedStory, and successMessage', () => {
+    expect(component.storyId).toEqual(0);
+    expect(component.updatedStory).toEqual({ title: '', description: '', department: '' });
+    expect(component.successMessage).toEqual('');
+  });
+
+  it('should close successMessage on closeSuccessMessage call', () => {
+    component.successMessage = 'Story updated successfully!';
+    component.closeSuccessMessage();
+    expect(component.successMessage).toEqual('');
+  });
 });

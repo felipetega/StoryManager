@@ -20,7 +20,7 @@ export class DeleteStoryComponent {
 
   constructor(private httpClient: HttpClient) {}
 
-  deleteStory() {
+  deleteStory(httpClient: HttpClient) {
     console.log(this.storyId)
     if (this.storyId < 0) {
       console.error("Invalid input. StoryId is required.");
