@@ -9,7 +9,7 @@
     <label for="department">Department:</label>
     <input type="text" id="department" [(ngModel)]="newStory.department" />
 
-    <button (click)="createStory()">Create Story</button>
+    <button mat-raised-button color="accent" (click)="createStory()">Create Story</button>
 
     <div *ngIf="successMessage" class="success-message">
         {{ successMessage }}

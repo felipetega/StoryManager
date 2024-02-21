@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-create-story',
@@ -9,7 +12,10 @@ import { FormsModule } from '@angular/forms';
   imports: [
     FormsModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   templateUrl: './create-story.component.html',
   styleUrl: './create-story.component.css'

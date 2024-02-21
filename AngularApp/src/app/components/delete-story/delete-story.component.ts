@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-delete-story',
@@ -9,7 +10,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     FormsModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    MatButtonModule
   ],
   templateUrl: './delete-story.component.html',
   styleUrl: './delete-story.component.css'
@@ -20,7 +22,7 @@ export class DeleteStoryComponent {
 
   constructor(private httpClient: HttpClient) {}
 
-  deleteStory(httpClient: HttpClient) {
+  deleteStory() {
     console.log(this.storyId)
     if (this.storyId < 0) {
       console.error("Invalid input. StoryId is required.");

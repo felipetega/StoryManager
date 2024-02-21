@@ -12,7 +12,7 @@
     <label for="department">Department:</label>
     <input type="text" id="department" [(ngModel)]="updatedStory.department" />
 
-    <button (click)="updateStory()">Update Story</button>
+    <button mat-raised-button color="primary" (click)="updateStory()">Update Story</button>
 
     <div *ngIf="successMessage" class="success-message">
         {{ successMessage }}

@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+
 
 @Component({
   selector: 'app-vote',
@@ -9,7 +13,10 @@ import { FormsModule } from '@angular/forms';
   imports: [
     HttpClientModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule
   ],
   templateUrl: './vote.component.html',
   styleUrl: './vote.component.css'

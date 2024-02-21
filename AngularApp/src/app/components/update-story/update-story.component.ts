@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import {MatButtonModule} from '@angular/material/button';
 
 // Define an interface for the updated story
 interface UpdatedStory {
@@ -19,7 +20,8 @@ interface UpdatedStory {
   imports: [
     FormsModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    MatButtonModule
   ],
   templateUrl: './update-story.component.html',
   styleUrls: ['./update-story.component.css']

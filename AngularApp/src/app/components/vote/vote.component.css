@@ -1,4 +1,3 @@
-/* Styles for the user input section */
 div > div:first-child {
   margin-bottom: 20px;
 }
@@ -15,7 +14,6 @@ input {
   box-sizing: border-box;
 }
 
-/* Styles for the story cards */
 .story-container {
   margin-bottom: 20px;
 }
@@ -27,12 +25,12 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: lightgray; /* Light bisque color */
+  background-color: aliceblue;
   transition: background-color 0.3s, transform 0.3s;
 }
 
 .story-card:hover {
-  transform: translate(1px, 1px); /* Move card to the right and down on hover */
+  transform: translate(1px, 1px);
 }
 
 .story-card h2 {
@@ -49,7 +47,6 @@ input {
   cursor: pointer;
 }
 
-/* Optional: Hover effect for buttons */
 .story-card button:hover {
   background-color: #ddd;
 }

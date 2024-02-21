@@ -3,7 +3,7 @@
     <label for="user">Story ID</label>
     <input type="text" [(ngModel)]="storyId">
     
-    <button (click)="deleteStory()">Delete Story</button>
+    <button mat-raised-button color="warn" (click)="deleteStory()">Delete Story</button>
 
     <div *ngIf="successMessage" class="success-message">
         {{ successMessage }}
