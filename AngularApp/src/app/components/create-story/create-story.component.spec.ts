@@ -49,5 +49,5 @@ describe('CreateStoryComponent', () => {
     button.click();
     expect(component.createStory).toHaveBeenCalled();
   });
-
+  
 });

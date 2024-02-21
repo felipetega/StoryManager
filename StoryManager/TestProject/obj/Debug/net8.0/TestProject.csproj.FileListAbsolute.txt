@@ -157,3 +157,4 @@ C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\obj\Debug\net8.0\ref\TestP
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\AutoFixture.dll
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\Fare.dll
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\AutoFixture.AutoMoq.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
