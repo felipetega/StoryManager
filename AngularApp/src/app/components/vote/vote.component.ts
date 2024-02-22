@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import { StoryService } from '../../Service/StoryService/story.service';
+import { VoteService } from '../../Service/VoteService/vote.service';
 
 
 @Component({
@@ -23,18 +25,17 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class VoteComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private StoryService: StoryService, private VoteService: VoteService) {}
 
   data: any = [];
-  userId: number = 0; // Change userId to number and initialize to 0
+  userId: number = 0;
 
   ngOnInit(): void {
     this.fetchData();
   }
 
   fetchData() {
-    this.httpClient.get("https://localhost:7147/stories").subscribe((data: any) => {
-      // console.log(data);
+    this.StoryService.getAll().subscribe((data: any) => {
       this.data = data;
     });
   }
@@ -52,15 +53,15 @@ export class VoteComponent implements OnInit {
       voteValue: voteValue
     };
 
-    this.httpClient.post("https://localhost:7147/votes", votePayload).subscribe(
+    this.VoteService.post(votePayload).subscribe(
       (response: any) => {
-        if (response==null) {
+        if (response == null) {
           this.fetchData();
         }
       },
       (error: any) => {
         console.error(error);
-    
+
         if (error instanceof HttpErrorResponse) {
           if (error.status === 404) {
             alert(`Error ${error.status}: Not Found - User ID don't exist.`);
@@ -72,7 +73,6 @@ export class VoteComponent implements OnInit {
         }
       }
     );
-    
   }
 
   calculateVoteBalance(votes: any[]): number {

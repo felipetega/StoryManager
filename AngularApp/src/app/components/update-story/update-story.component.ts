@@ -1,18 +1,11 @@
-// import necessary modules and components
+import { StoryService } from './../../Service/StoryService/story.service';
 import { Component } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import {MatButtonModule} from '@angular/material/button';
-
-// Define an interface for the updated story
-interface UpdatedStory {
-  storyId: number;
-  title: string;
-  description: string;
-  department: string;
-}
+import { MatButtonModule } from '@angular/material/button';
+import { StoryView } from '../../ViewModels/StoryView';
 
 @Component({
   selector: 'app-update-story',
@@ -28,10 +21,10 @@ interface UpdatedStory {
 })
 export class UpdateStoryComponent {
   storyId: number = 0;
-  updatedStory = { title: '', description: '', department: '' };
+  updatedStory: StoryView = { title: '', description: '', department: '' };
   successMessage: string = '';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private StoryService: StoryService) {}
 
   updateStory() {
     console.log(this.storyId)
@@ -40,30 +33,28 @@ export class UpdateStoryComponent {
       return;
     }
 
+    this.StoryService.update(this.storyId, this.updatedStory)
+      .subscribe(
+        (response: any) => {
+          if (response == null) {
+            console.log('Story updated successfully:', response);
+            this.successMessage = 'Story updated successfully!';
+          }
+        },
+        (error: any) => {
+          console.error('Error updating story:', error);
 
-    this.httpClient.put(`https://localhost:7147/stories/${this.storyId}`, this.updatedStory)
-    .subscribe(
-      (response: any) => {
-        if (response==null) {
-          console.log('Story updated successfully:', response);
-          this.successMessage = 'Story updated successfully!';
-        }
-      },
-      (error: any) => {
-        console.error('Error updating story:', error);
-
-        if (error instanceof HttpErrorResponse) {
-          if (error.status === 400) {
-            alert(`Error ${error.status}: Bad Request - Invalid input`);
-          } else if (error.status === 404) {
-            alert(`Error ${error.status}: Not Found - Story ID don't exist`);
-          } else {
-            alert(`An unexpected error occurred: ${error.status}`);
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 400) {
+              alert(`Error ${error.status}: Bad Request - Invalid input`);
+            } else if (error.status === 404) {
+              alert(`Error ${error.status}: Not Found - Story ID don't exist`);
+            } else {
+              alert(`An unexpected error occurred: ${error.status}`);
+            }
           }
         }
-      }
-    );
-
+      );
   }
 
   closeSuccessMessage() {

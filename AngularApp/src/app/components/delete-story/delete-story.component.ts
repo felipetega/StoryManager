@@ -1,3 +1,4 @@
+import { StoryService } from './../../Service/StoryService/story.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -20,7 +21,7 @@ export class DeleteStoryComponent {
   storyId: number = 0;
   successMessage: string = '';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private StoryService: StoryService) {}
 
   deleteStory() {
     console.log(this.storyId)
@@ -30,22 +31,19 @@ export class DeleteStoryComponent {
     }
 
 
-    this.httpClient.delete(`https://localhost:7147/stories/${this.storyId}`)
-    .subscribe(
+    this.StoryService.delete(this.storyId).subscribe(
       (response: any) => {
-        if (response==null) {
-          console.log('Story updated successfully:', response);
-          this.successMessage = 'Story updated successfully!';
+        if (response == null) {
+          console.log('Story deleted successfully:', response);
+          this.successMessage = 'Story deleted successfully!';
         }
       },
       (error: any) => {
-        console.error('Error updating story:', error);
+        console.error('Error deleting story:', error);
 
         if (error instanceof HttpErrorResponse) {
-          if (error.status === 400) {
-            alert(`Error ${error.status}: Bad Request - Invalid input`);
-          } else if (error.status === 404) {
-            alert(`Error ${error.status}: Not Found - Story ID don't exist`);
+          if (error.status === 404) {
+            alert(`Error ${error.status}: Not Found - Story ID doesn't exist`);
           } else {
             alert(`An unexpected error occurred: ${error.status}`);
           }
@@ -53,6 +51,7 @@ export class DeleteStoryComponent {
       }
     );
   }
+
   closeSuccessMessage() {
     this.successMessage = '';
   }

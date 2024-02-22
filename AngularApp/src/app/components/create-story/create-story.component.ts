@@ -1,3 +1,4 @@
+import { StoryService } from './../../Service/StoryService/story.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -24,19 +25,19 @@ export class CreateStoryComponent {
   newStory = { title: '', description: '', department: '' };
   successMessage: string = '';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private StoryService: StoryService) {}
 
   createStory() {
-    this.httpClient.post('https://localhost:7147/stories', this.newStory).subscribe(
+    this.StoryService.create(this.newStory).subscribe(
       (response: any) => {
-        if (response==null) {
+        if (response == null) {
           console.log('Story created successfully:', response);
           this.successMessage = 'Story created successfully!';
         }
       },
       (error: any) => {
         console.error('Error creating story:', error);
-        
+
         if (error instanceof HttpErrorResponse) {
           if (error.status === 400) {
             alert(`Error ${error.status}: Bad Request - Invalid input`);
