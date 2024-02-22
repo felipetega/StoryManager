@@ -105,6 +105,7 @@ namespace TestProject.ControllerTests
         [Theory]
         [InlineData(-1, 1, true)]
         [InlineData(1, -1, true)]
+        [InlineData(-1, -1, true)]
         public async Task Create_ReturnsBadRequest_WhenInvalidInput(int userId, int storyId, bool voteValue)
         {
             // Arrange
@@ -163,6 +164,10 @@ namespace TestProject.ControllerTests
         [InlineData(-1, 1, 1, true)]
         [InlineData(1, -1, 1, true)]
         [InlineData(1, 1, -1, true)]
+        [InlineData(-1, -1, 1, true)]
+        [InlineData(1, -1, -1, true)]
+        [InlineData(-1, 1, -1, true)]
+        [InlineData(-1, -1, -1, true)]
         public async Task Update_ReturnsBadRequest_WhenInvalidInput(int id, int userId, int storyId, bool voteValue)
         {
             // Arrange

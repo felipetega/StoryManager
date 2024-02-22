@@ -38,7 +38,6 @@ namespace TestProject.ServiceTests
             // Assert
             Assert.True(created);
 
-            // Check if the user is added to the database
             var createdUser = await _context.Users.FirstOrDefaultAsync(u => u.Name == "New User");
 
             Assert.NotNull(createdUser);

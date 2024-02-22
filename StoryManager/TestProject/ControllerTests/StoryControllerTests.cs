@@ -78,6 +78,7 @@ namespace TestProject.ControllerTests
             Assert.Equal(mockStoryDTOs[0].Description, returnedStories[0].Description);
             Assert.Equal(mockStoryDTOs[0].Title, returnedStories[0].Title);
         }
+
         [Fact]
         public async Task Create_ReturnsCreated_WhenValidInput()
         {
@@ -105,17 +106,20 @@ namespace TestProject.ControllerTests
         }
 
 
-
-        [Fact]
-        public async Task Create_ReturnsBadRequest_WhenInvalidInput()
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData("a","","")]
+        [InlineData("", "a", "")]
+        [InlineData("", "", "a")]
+        [InlineData("a", "a", "")]
+        [InlineData("", "a", "a")]
+        [InlineData("a", "", "a")]
+        public async Task Create_ReturnsBadRequest_WhenInvalidInput(string title, string description, string department)
         {
             // Arrange
             var mockStoryService = new Mock<IStoryService>();
             var storyController = new StoryController(mockStoryService.Object);
 
-            var title = "Updated Title";
-            var description = "Updated Description";
-            var department = "";
 
             var storyView = new CreateStoryView
             {
@@ -193,17 +197,24 @@ namespace TestProject.ControllerTests
             Assert.IsType<NotFoundResult>(result);
         }
 
-        [Fact]
-        public async Task Update_ReturnsBadRequest_WhenInvalidInput()
+
+
+        [Theory]
+        [InlineData("", "", "")]
+        [InlineData("a", "", "")]
+        [InlineData("", "a", "")]
+        [InlineData("", "", "a")]
+        [InlineData("a", "a", "")]
+        [InlineData("", "a", "a")]
+        [InlineData("a", "", "a")]
+        public async Task Update_ReturnsBadRequest_WhenInvalidInput(string title, string description, string department)
         {
             // Arrange
             var mockStoryService = new Mock<IStoryService>();
             var storyController = new StoryController(mockStoryService.Object);
 
             var id = 1;
-            var title = "Updated Title";
-            var description = "Updated Description";
-            var department = "";
+
 
             var storyView = new CreateStoryView
             {
@@ -218,7 +229,6 @@ namespace TestProject.ControllerTests
             // Assert
             Assert.IsType<BadRequestResult>(result);
 
-            // Ensure that the Update method of the service is not called when input is invalid
             mockStoryService.Verify(x => x.Update(It.IsAny<StoryDTO>(), It.IsAny<int>()), Times.Never);
         }
 

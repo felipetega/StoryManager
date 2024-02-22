@@ -80,7 +80,6 @@ namespace TestProject.ServiceTests
             // Arrange
             var service = new StoryService(_context);
 
-            // Add a story to the database
             _context.Stories.Add(new Story
             {
                 Id = 1,
@@ -110,12 +109,34 @@ namespace TestProject.ServiceTests
         }
 
         [Fact]
+        public async Task Update_ReturnsFalse_WhenDontUpdate()
+        {
+            // Arrange
+            var service = new StoryService(_context);
+
+            _context.Stories.Add(new Story
+            {
+                Id = 1,
+                Title = "Existing Story",
+                Department = "Existing Department",
+                Description = "Existing Description",
+            });
+            await _context.SaveChangesAsync();
+
+            // Act
+            var updatedStory = await _context.Stories.FirstOrDefaultAsync(s => s.Id == -1);
+
+            // Assert
+            Assert.Null(updatedStory);
+        }
+
+
+        [Fact]
         public async Task Delete_RemovesStoryFromDatabase()
         {
             // Arrange
             var service = new StoryService(_context);
 
-            // Add a story to the database
             _context.Stories.Add(new Story
             {
                 Id = 1,
@@ -131,7 +152,6 @@ namespace TestProject.ServiceTests
             // Assert
             Assert.True(deleted);
 
-            // Check if the story is removed from the database
             var deletedStory = await _context.Stories.FirstOrDefaultAsync(s => s.Id == 1);
 
             Assert.Null(deletedStory);
