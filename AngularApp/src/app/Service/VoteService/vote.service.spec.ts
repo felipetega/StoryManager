@@ -33,4 +33,42 @@ describe('VoteService', () => {
     req.flush({});
   });
 
+  it('should return Bad Request when posting a vote with invalid input', () => {
+    const votePayload = { userId: 0, storyId: 1, voteValue: true };
+
+    service.post(votePayload).subscribe(
+      () => {
+        fail('Expected an error response');
+      },
+      (error) => {
+        expect(error.status).toBe(400);
+        expect(error.statusText).toBe('Bad Request');
+      }
+    );
+
+    const req = httpTestingController.expectOne('https://localhost:7147/votes');
+    expect(req.request.method).toBe('POST');
+
+    req.flush({ error: 'Bad Request' }, { status: 400, statusText: 'Bad Request' });
+  });
+
+  it('should handle 404 error when posting a vote for a non-existing user', () => {
+    const votePayload = { userId: 999, storyId: 1, voteValue: true };
+
+    service.post(votePayload).subscribe(
+      () => {
+        fail('Expected an error response');
+      },
+      (error) => {
+        expect(error.status).toBe(404);
+        expect(error.statusText).toBe('Not Found');
+      }
+    );
+
+    const req = httpTestingController.expectOne('https://localhost:7147/votes');
+    expect(req.request.method).toBe('POST');
+
+    req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+  });
+
 });

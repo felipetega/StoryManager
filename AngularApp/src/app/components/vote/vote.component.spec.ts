@@ -11,7 +11,7 @@ describe('VoteComponent', () => {
       imports: [VoteComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(VoteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -40,5 +40,5 @@ describe('VoteComponent', () => {
     const result = component.trackById(2, { id: 2, voteValue: true });
     expect(result).toEqual(2);
   });
-  
+
 });
