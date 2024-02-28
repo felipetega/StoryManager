@@ -1,8 +1,11 @@
 using API.Infrastructure.Context;
+using API.Services.Handler;
 using API.Services.Services;
 using API.Services.Services.Interfaces;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApiContext>(options =>
@@ -12,6 +15,9 @@ builder.Services.AddDbContext<ApiContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IStoryService, StoryService>();
 builder.Services.AddScoped<IVoteService, VoteService>();
+
+builder.Services.AddScoped<IRequestHandler<CreateStoryRequest, bool>, CreateStoryHandler>();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 // Add CORS services
 builder.Services.AddCors(p => p.AddPolicy("AllowOrigin", build =>

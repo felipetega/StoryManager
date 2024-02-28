@@ -139,3 +139,6 @@ C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\obj\Debug\net8.0\refin
 C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\obj\Debug\net8.0\API.Application.pdb
 C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\obj\Debug\net8.0\API.Application.genruntimeconfig.cache
 C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\obj\Debug\net8.0\ref\API.Application.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\bin\Debug\net8.0\MediatR.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\bin\Debug\net8.0\MediatR.Contracts.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\API.Application\bin\Debug\net8.0\MediatR.Extensions.Microsoft.DependencyInjection.dll

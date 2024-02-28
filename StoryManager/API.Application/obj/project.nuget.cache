@@ -1,12 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "62+pcAH+8T1FodWYulmq5jT4o3ei8KbQxa2uX9sd0r9o78Q/3EkSMrfqYHUEfjfXonFn7ti4QU20YI6gk63MfA==",
+  "dgSpecHash": "9ZuKKtb51QhhbP4PVc+JAktC8eBHNXqD9Cs5TUZCP4xs57EXrqSWEvEUBXbrH+a4MeOL5KxJZTaqjeJXQu4s+g==",
   "success": true,
   "projectFilePath": "C:\\dev\\PROJETOS\\StoryManager\\StoryManager\\API.Application\\API.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.1.0\\mediatr.extensions.microsoft.dependencyinjection.11.1.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\microsoft.codeanalysis.common\\4.5.0\\microsoft.codeanalysis.common.4.5.0.nupkg.sha512",

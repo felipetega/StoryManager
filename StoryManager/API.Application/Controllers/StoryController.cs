@@ -1,19 +1,25 @@
 ﻿using API.Application.ViewModel;
 using API.Services.DTOs;
+using API.Services.Handler;
 using API.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace API.Application.Controllers
 {
     public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
+        private readonly IMediator _mediator;
 
-        public StoryController(IStoryService storyService)
+        public StoryController(IStoryService storyService, IMediator mediator)
         {
             _storyService = storyService;
+            _mediator = mediator;
         }
 
         [HttpGet("stories")]
@@ -35,6 +41,7 @@ namespace API.Application.Controllers
                     VoteValue = y.VoteValue,
                 })
             }).ToList();
+
             if (storyViewModel.Count == 0)
             {
                 return NoContent();
@@ -42,10 +49,6 @@ namespace API.Application.Controllers
 
             return StatusCode(200, storyViewModel);
         }
-
-
-
-
 
         [HttpPost("stories")]
         [ProducesResponseType(201)]
@@ -58,14 +61,19 @@ namespace API.Application.Controllers
                 return BadRequest();
             }
 
-            StoryDTO storyDTO = new StoryDTO
+            var createStoryRequest = new CreateStoryRequest
             {
                 Title = storyView.Title,
                 Description = storyView.Description,
                 Department = storyView.Department
             };
 
-            await _storyService.Create(storyDTO);
+            bool success = await _mediator.Send(createStoryRequest);
+
+            if (!success)
+            {
+                return BadRequest("Failed to create the story.");
+            }
 
             return StatusCode(201);
         }

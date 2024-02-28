@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "mAgip8kRQaTkx1ycnjG8kXtIOnqBvThdmAGZRQURuo1mMWOp4//J6SA6mjzSCXxMbuYLJnvV4cKQm98r/R14Ww==",
+  "dgSpecHash": "BdE8XD3kcxlFA8NXUy5dDCyI4yUXqUBuTJlNUWZZGGVXefGjqfzLEkYODBudLl6Ac9CSqFqEwUK2xc7NLydhKg==",
   "success": true,
   "projectFilePath": "C:\\dev\\PROJETOS\\StoryManager\\StoryManager\\API.Services\\API.Services.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.1.0\\mediatr.extensions.microsoft.dependencyinjection.11.1.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.1\\microsoft.data.sqlclient.5.1.1.nupkg.sha512",
