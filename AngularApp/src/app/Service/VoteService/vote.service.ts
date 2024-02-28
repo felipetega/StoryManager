@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 })
 export class VoteService {
 
-  private apiUrl = 'https://localhost:7147/votes';
+  private apiUrl = 'https://localhost:7147/stories';
 
   constructor(private httpClient: HttpClient) { }
 
-  post(votePayload: any): Observable<any> {
-    return this.httpClient.post(this.apiUrl, votePayload);
+  post(storyId: number, votePayload: any): Observable<any> {
+    const voteUrl = `${this.apiUrl}/${storyId}/votes`;
+    return this.httpClient.post(voteUrl, votePayload);
   }
 }

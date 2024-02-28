@@ -9,7 +9,7 @@ namespace API.Services.Services.Interfaces
 {
     public interface IVoteService
     {
-        Task<List<VoteDTO>> GetAll();
+        Task<List<VoteDTO>> GetByStoryId(int id);
         Task<bool> Create(VoteDTO storyDTO);
         Task<bool> Update(VoteDTO storyDTO, int id);
         Task<bool> Delete(int id);

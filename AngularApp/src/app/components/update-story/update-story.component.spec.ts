@@ -11,7 +11,7 @@ describe('UpdateStoryComponent', () => {
       imports: [UpdateStoryComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(UpdateStoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

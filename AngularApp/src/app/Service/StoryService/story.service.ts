@@ -12,8 +12,8 @@ export class StoryService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getAll(): Observable<any> {
-    return this.httpClient.get(this.apiUrl);
+  getAll(): Observable<StoryView[]> {
+    return this.httpClient.get<StoryView[]>(this.apiUrl);
   }
 
   create(newStory: any): Observable<any> {

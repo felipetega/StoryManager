@@ -53,5 +53,28 @@ namespace TestProject.ServiceTests
             Assert.True(createdVote.VoteValue);
         }
 
+        [Fact]
+        public async Task Create_ReturnsFalseWhenStoryOrUserNotFound()
+        {
+            // Arrange
+            var service = new VoteService(_context);
+
+
+            // Act
+            var created = await service.Create(new VoteDTO
+            {
+                UserId = 1,
+                StoryId = 1,
+                VoteValue = true,
+            });
+
+            // Assert
+            Assert.False(created);
+
+            var createdVote = await _context.Votes.FirstOrDefaultAsync();
+            Assert.Null(createdVote);
+        }
+
+
     }
 }

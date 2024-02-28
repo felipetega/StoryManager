@@ -19,26 +19,30 @@ namespace API.Services.Services
             _context = apiContext;
         }
 
-        public async Task<List<VoteDTO>> GetAll()
+        public async Task<List<VoteDTO>> GetByStoryId(int storyId)
         {
             return await _context.Votes
+                .Where(v => v.StoryId == storyId)
                 .Select(v => new VoteDTO
                 {
                     Id = v.Id,
                     UserId = v.UserId,
                     StoryId = v.StoryId,
                     VoteValue = v.VoteValue,
+                    User = new UserDTO()
+                    {
+                        Name = v.User.Name
+                    }
                 })
                 .ToListAsync();
         }
 
         public async Task<bool> Create(VoteDTO voteDTO)
         {
+            var storyIdExists = await _context.Stories.AnyAsync(x => x.Id == voteDTO.StoryId);
+            var userIdExists = await _context.Users.AnyAsync(x => x.Id == voteDTO.UserId);
 
-            var storyId = await _context.Stories.FirstOrDefaultAsync(x => x.Id == voteDTO.StoryId);
-            var userId = await _context.Users.FirstOrDefaultAsync(x => x.Id == voteDTO.UserId);
-
-            if (storyId == null || userId == null)
+            if (!storyIdExists || !userIdExists)
             {
                 return false;
             }
@@ -55,6 +59,7 @@ namespace API.Services.Services
 
             return true;
         }
+
 
         public async Task<bool> Update(VoteDTO voteDTO, int id)
         {

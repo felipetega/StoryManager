@@ -31,11 +31,8 @@ namespace API.Application.Controllers
                 Title = x.Title,
                 Votes = x.Votes.Select(y => new VoteView()
                 {
+                    Name = y.User.Name,
                     VoteValue = y.VoteValue,
-                    User = new UserView()
-                    {
-                        Name = y.User.Name,
-                    },
                 })
             }).ToList();
             if (storyViewModel.Count == 0)

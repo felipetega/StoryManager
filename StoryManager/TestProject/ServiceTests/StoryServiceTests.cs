@@ -157,6 +157,23 @@ namespace TestProject.ServiceTests
             Assert.Null(deletedStory);
         }
 
+        [Fact]
+        public async Task Delete_ReturnsFalse_WhenStoryNotFound()
+        {
+            // Arrange
+            var service = new StoryService(_context);
+
+
+            // Act
+            var deleted = await service.Delete(1);
+
+            // Assert
+            Assert.False(deleted);
+
+            var remainingStory = await _context.Stories.FirstOrDefaultAsync();
+            Assert.Null(remainingStory);
+        }
+
 
 
     }

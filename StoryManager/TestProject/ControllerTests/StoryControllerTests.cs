@@ -13,7 +13,6 @@ using Xunit;
 namespace TestProject.ControllerTests
 {
 
-    // Use IClassFixture to share the fixture among test classes
     public class StoryControllerTests
     {
 

@@ -17,12 +17,12 @@ namespace API.Application.Controllers
             _voteService = voteService;
         }
 
-        [HttpGet("votes")]
+        [HttpGet("stories/{storyId}/votes")]
         [ProducesResponseType(typeof(List<VoteView>), 200)]
         [ProducesResponseType(204)]
-        public async Task<ActionResult<List<VoteView>>> GetAll()
+        public async Task<ActionResult<List<VoteView>>> GetAll(int storyId)
         {
-            IEnumerable<VoteDTO> voteDTOs = await _voteService.GetAll();
+            IEnumerable<VoteDTO> voteDTOs = await _voteService.GetByStoryId(storyId);
 
             if (voteDTOs == null || !voteDTOs.Any())
             {
@@ -31,26 +31,28 @@ namespace API.Application.Controllers
 
             List<VoteView> voteViews = voteDTOs.Select(voteDTO => new VoteView
             {
+                Name = voteDTO.User.Name,
                 VoteValue = voteDTO.VoteValue,
             }).ToList();
 
             return Ok(voteViews);
         }
 
-        [HttpPost("votes")]
+
+        [HttpPost("stories/{storyId}/votes")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> Create([FromBody] CreateVoteView createVoteView)
+        public async Task<ActionResult> Create(int storyId, [FromBody] CreateVoteView createVoteView)
         {
-            if (createVoteView == null || createVoteView.UserId <= 0 || createVoteView.StoryId <= 0 || createVoteView.UserId is string)
+            if (createVoteView == null || createVoteView.UserId <= 0 || createVoteView.UserId is string)
             {
                 return BadRequest();
             }
 
             VoteDTO voteDTO = new VoteDTO
             {
-                StoryId = createVoteView.StoryId,
+                StoryId = storyId,
                 UserId = createVoteView.UserId,
                 VoteValue = createVoteView.VoteValue,
             };
@@ -66,48 +68,6 @@ namespace API.Application.Controllers
         }
 
 
-        [HttpPut("votes/{id}")]
-        [ProducesResponseType(typeof(VoteView), 200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        public async Task<ActionResult> Update([FromBody] CreateVoteView voteView, int id)
-        {
-            if (id<0 || voteView.UserId<0 || voteView.StoryId<0 || !(voteView.VoteValue is bool))
-            {
-                return BadRequest();
-            }
 
-            VoteDTO voteDTO = new VoteDTO
-            {
-                Id = id,
-                UserId = voteView.UserId,
-                StoryId = voteView.StoryId,
-                VoteValue = voteView.VoteValue
-            };
-
-            var updatedVoteDTO = await _voteService.Update(voteDTO, id);
-
-            if (updatedVoteDTO == false)
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        }
-
-        [HttpDelete("votes/{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<bool>> Delete(int id)
-        {
-            bool deleted = await _voteService.Delete(id);
-
-            if (!deleted)
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        }
     }
 }

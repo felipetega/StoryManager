@@ -53,7 +53,7 @@ export class VoteComponent implements OnInit {
       voteValue: voteValue
     };
 
-    this.VoteService.post(votePayload).subscribe(
+    this.VoteService.post(storyId, votePayload).subscribe(
       (response: any) => {
         if (response == null) {
           this.fetchData();
