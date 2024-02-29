@@ -1,6 +1,7 @@
 ﻿using API.Application.ViewModel;
 using API.Services.DTOs;
 using API.Services.Handler;
+using API.Services.Handler.Create;
 using API.Services.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,9 @@ namespace API.Application.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult<List<StoryView>>> GetAll()
         {
-            IEnumerable<StoryDTO> storyDTOs = await _storyService.GetAll();
+            var getStoryRequest = new GetStoryRequest();
+
+            List<StoryDTO> storyDTOs = await _mediator.Send(getStoryRequest);
 
             List<StoryView> storyViewModel = storyDTOs.Select(x => new StoryView()
             {
@@ -49,6 +52,7 @@ namespace API.Application.Controllers
 
             return StatusCode(200, storyViewModel);
         }
+
 
         [HttpPost("stories")]
         [ProducesResponseType(201)]
@@ -78,20 +82,19 @@ namespace API.Application.Controllers
             return StatusCode(201);
         }
 
-
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
         [HttpPut("stories/{id}")]
-        public async Task<IActionResult> Update([FromBody] CreateStoryView storyView, int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult> Update(int id, [FromBody] CreateStoryView storyView)
         {
-            if (storyView == null || string.IsNullOrWhiteSpace(storyView.Title) ||
+            if (storyView == null || id <= 0 || string.IsNullOrWhiteSpace(storyView.Title) ||
                 string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))
             {
                 return BadRequest();
             }
 
-            StoryDTO storyDTO = new StoryDTO
+            var updateStoryRequest = new UpdateStoryRequest
             {
                 Id = id,
                 Title = storyView.Title,
@@ -99,12 +102,13 @@ namespace API.Application.Controllers
                 Department = storyView.Department
             };
 
-            var updatedStoryDTO = await _storyService.Update(storyDTO, id);
+            bool success = await _mediator.Send(updateStoryRequest);
 
-            if (updatedStoryDTO == false)
+            if (!success)
             {
-                return NotFound();
+                return NotFound("Story not found or failed to update.");
             }
+
             return Ok();
         }
 
@@ -112,16 +116,22 @@ namespace API.Application.Controllers
         [HttpDelete("stories/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoryView>> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            bool deleted = await _storyService.Delete(id);
-
-            if (!deleted)
+            var deleteStoryRequest = new DeleteStoryRequest
             {
-                return NotFound();
+                Id = id
+            };
+
+            bool success = await _mediator.Send(deleteStoryRequest);
+
+            if (!success)
+            {
+                return NotFound("Story not found or failed to delete.");
             }
 
             return Ok();
         }
+
     }
 }
