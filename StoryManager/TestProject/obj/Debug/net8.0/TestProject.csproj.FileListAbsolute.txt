@@ -158,3 +158,6 @@ C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\AutoFixtu
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\Fare.dll
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\AutoFixture.AutoMoq.dll
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\MediatR.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\MediatR.Contracts.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\MediatR.Extensions.Microsoft.DependencyInjection.dll

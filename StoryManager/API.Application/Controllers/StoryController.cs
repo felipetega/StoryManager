@@ -1,38 +1,30 @@
 ﻿using API.Application.ViewModel;
 using API.Services.DTOs;
-using API.Services.Handler;
-using API.Services.Handler.Create;
-using API.Services.Services.Interfaces;
+using API.Services.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Application.Controllers
 {
     public class StoryController : ControllerBase
     {
-        private readonly IStoryService _storyService;
         private readonly IMediator _mediator;
 
-        public StoryController(IStoryService storyService, IMediator mediator)
+        public StoryController(IMediator mediator)
         {
-            _storyService = storyService;
             _mediator = mediator;
         }
 
         [HttpGet("stories")]
-        [ProducesResponseType(typeof(List<StoryView>), 200)]
+        [ProducesResponseType(typeof(List<IdStoryView>), 200)]
         [ProducesResponseType(204)]
-        public async Task<ActionResult<List<StoryView>>> GetAll()
+        public async Task<ActionResult<List<IdStoryView>>> GetAll()
         {
             var getStoryRequest = new GetStoryRequest();
 
             List<StoryDTO> storyDTOs = await _mediator.Send(getStoryRequest);
 
-            List<StoryView> storyViewModel = storyDTOs.Select(x => new StoryView()
+            List<IdStoryView> storyViewModel = storyDTOs.Select(x => new IdStoryView()
             {
                 Id = x.Id,
                 Department = x.Department,
@@ -57,7 +49,7 @@ namespace API.Application.Controllers
         [HttpPost("stories")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> Create([FromBody] CreateStoryView storyView)
+        public async Task<ActionResult> Create([FromBody] StoryView storyView)
         {
             if (storyView == null || string.IsNullOrWhiteSpace(storyView.Title) ||
                 string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))
@@ -86,7 +78,7 @@ namespace API.Application.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> Update(int id, [FromBody] CreateStoryView storyView)
+        public async Task<ActionResult> Update(int id, [FromBody] StoryView storyView)
         {
             if (storyView == null || id <= 0 || string.IsNullOrWhiteSpace(storyView.Title) ||
                 string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))

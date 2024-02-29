@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using API.Application.Controllers;
 using API.Application.ViewModel;
 using API.Services.DTOs;
+using API.Services.Requests;
 using API.Services.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -20,10 +22,12 @@ namespace TestProject.ControllerTests
         public async Task GetAll_ReturnsNoContent_WhenNoStories()
         {
             // Arrange
+            var mockMediator = new Mock<IMediator>();
             var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var storyController = new StoryController(mockMediator.Object);
 
-            mockStoryService.Setup(x => x.GetAll()).ReturnsAsync(new List<StoryDTO>());
+            mockMediator.Setup(x => x.Send(It.IsAny<GetStoryRequest>(), default))
+                        .ReturnsAsync(new List<StoryDTO>());
 
             // Act
             var result = await storyController.GetAll();
@@ -33,43 +37,46 @@ namespace TestProject.ControllerTests
             Assert.Equal(204, noContentResult.StatusCode);
         }
 
+
+
         [Fact]
         public async Task GetAll_ReturnsOk_WhenStoriesExist()
         {
             // Arrange
             var mockStoryDTOs = new List<StoryDTO>
+    {
+        new StoryDTO
+        {
+            Department = "IT",
+            Description = "Sample description",
+            Title = "Sample title",
+            Votes = new List<VoteDTO>
             {
-                new StoryDTO
+                new VoteDTO
                 {
-                    Department = "IT",
-                    Description = "Sample description",
-                    Title = "Sample title",
-                    Votes = new List<VoteDTO>
+                    VoteValue = true,
+                    User = new UserDTO
                     {
-                        new VoteDTO
-                        {
-                            VoteValue = true,
-                            User = new UserDTO
-                            {
-                                Name = "John Doe"
-                            }
-                        }
+                        Name = "John Doe"
                     }
                 }
-            };
+            }
+        }
+    };
 
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
-            mockStoryService.Setup(x => x.GetAll()).ReturnsAsync(mockStoryDTOs);
+            mockMediator.Setup(x => x.Send(It.IsAny<GetStoryRequest>(), default))
+                        .ReturnsAsync(mockStoryDTOs);
 
             // Act
             var result = await storyController.GetAll();
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<List<StoryView>>>(result);
+            var actionResult = Assert.IsType<ActionResult<List<IdStoryView>>>(result);
             var okObjectResult = Assert.IsType<ObjectResult>(actionResult.Result);
-            var returnedStories = Assert.IsType<List<StoryView>>(okObjectResult.Value);
+            var returnedStories = Assert.IsType<List<IdStoryView>>(okObjectResult.Value);
 
             Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
             Assert.NotEmpty(returnedStories);
@@ -78,18 +85,19 @@ namespace TestProject.ControllerTests
             Assert.Equal(mockStoryDTOs[0].Title, returnedStories[0].Title);
         }
 
+
         [Fact]
         public async Task Create_ReturnsCreated_WhenValidInput()
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
             var title = "Sample title";
             var description = "Sample description";
             var department = "IT";
 
-            var storyView = new CreateStoryView
+            var storyView = new StoryView
             {
                 Title = title,
                 Description = description,
@@ -100,14 +108,18 @@ namespace TestProject.ControllerTests
             var result = await storyController.Create(storyView);
 
             // Assert
-            var createdResult = Assert.IsType<StatusCodeResult>(result);
+            var createdResult = Assert.IsType<CreatedResult>(result);
             Assert.Equal(201, createdResult.StatusCode);
+            Assert.IsType<StoryView>(createdResult.Value);
         }
+
+
+
 
 
         [Theory]
         [InlineData("", "", "")]
-        [InlineData("a","","")]
+        [InlineData("a", "", "")]
         [InlineData("", "a", "")]
         [InlineData("", "", "a")]
         [InlineData("a", "a", "")]
@@ -116,11 +128,10 @@ namespace TestProject.ControllerTests
         public async Task Create_ReturnsBadRequest_WhenInvalidInput(string title, string description, string department)
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
-
-            var storyView = new CreateStoryView
+            var storyView = new StoryView
             {
                 Title = title,
                 Description = description,
@@ -133,33 +144,34 @@ namespace TestProject.ControllerTests
             // Assert
             Assert.IsType<BadRequestResult>(result);
 
-            mockStoryService.Verify(x => x.Create(It.IsAny<StoryDTO>()), Times.Never);
+            mockMediator.Verify(x => x.Send(It.IsAny<CreateStoryRequest>(), default), Times.Never);
         }
+
 
         [Fact]
         public async Task Update_ReturnsOk_WhenValidInput()
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
             var id = 1;
             var title = "Updated Title";
             var description = "Updated Description";
             var department = "Updated Department";
 
-            var storyView = new CreateStoryView
+            var storyView = new StoryView
             {
                 Title = title,
                 Description = description,
                 Department = department
             };
 
-            mockStoryService.Setup(x => x.Update(It.IsAny<StoryDTO>(), id))
-                            .ReturnsAsync(true);
+            mockMediator.Setup(x => x.Send(It.IsAny<UpdateStoryRequest>(), default))
+                        .ReturnsAsync(true);
 
             // Act
-            var result = await storyController.Update(storyView, id);
+            var result = await storyController.Update(id, storyView);
 
             // Assert
             var okObjectResult = Assert.IsType<OkResult>(result);
@@ -167,34 +179,36 @@ namespace TestProject.ControllerTests
             Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
         }
 
+
         [Fact]
         public async Task Update_ReturnsNotFound_WhenIdNotFound()
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
             var id = 1;
             var title = "Updated Title";
             var description = "Updated Description";
             var department = "Updated Department";
 
-            var storyView = new CreateStoryView
+            var storyView = new StoryView
             {
                 Title = title,
                 Description = description,
                 Department = department
             };
 
-            mockStoryService.Setup(x => x.Update(It.IsAny<StoryDTO>(), id))
-                            .ReturnsAsync(false);
+            mockMediator.Setup(x => x.Send(It.IsAny<UpdateStoryRequest>(), default))
+                        .ReturnsAsync(false);
 
             // Act
-            var result = await storyController.Update(storyView, id);
+            var result = await storyController.Update(id, storyView);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
         }
+
 
 
 
@@ -209,13 +223,12 @@ namespace TestProject.ControllerTests
         public async Task Update_ReturnsBadRequest_WhenInvalidInput(string title, string description, string department)
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
             var id = 1;
 
-
-            var storyView = new CreateStoryView
+            var storyView = new StoryView
             {
                 Title = title,
                 Description = description,
@@ -223,51 +236,54 @@ namespace TestProject.ControllerTests
             };
 
             // Act
-            var result = await storyController.Update(storyView, id);
+            var result = await storyController.Update(id, storyView);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);
 
-            mockStoryService.Verify(x => x.Update(It.IsAny<StoryDTO>(), It.IsAny<int>()), Times.Never);
+            mockMediator.Verify(x => x.Send(It.IsAny<UpdateStoryRequest>(), default), Times.Never);
         }
+
 
         [Fact]
         public async Task Delete_ReturnsOk_WhenIdFound()
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
             var id = 1;
 
-            mockStoryService.Setup(x => x.Delete(id)).ReturnsAsync(true);
+            mockMediator.Setup(x => x.Send(It.IsAny<DeleteStoryRequest>(), default)).ReturnsAsync(true);
 
             // Act
             var result = await storyController.Delete(id);
 
             // Assert
-            var okResult = Assert.IsType<OkResult>(result.Result);
+            var okResult = Assert.IsType<OkResult>(result);
 
             Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
         }
+
 
         [Fact]
         public async Task Delete_ReturnsNotFound_WhenIdNotFound()
         {
             // Arrange
-            var mockStoryService = new Mock<IStoryService>();
-            var storyController = new StoryController(mockStoryService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var storyController = new StoryController(mockMediator.Object);
 
             var id = 1;
 
-            mockStoryService.Setup(x => x.Delete(id)).ReturnsAsync(false);
+            mockMediator.Setup(x => x.Send(It.IsAny<DeleteStoryRequest>(), default)).ReturnsAsync(false);
 
             // Act
             var result = await storyController.Delete(id);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result.Result);
+            Assert.IsType<NotFoundResult>(result);
         }
+
 
     }
 }
