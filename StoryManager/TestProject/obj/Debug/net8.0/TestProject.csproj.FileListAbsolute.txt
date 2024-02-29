@@ -161,3 +161,4 @@ C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\Microsoft
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\MediatR.dll
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\MediatR.Contracts.dll
 C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\MediatR.Extensions.Microsoft.DependencyInjection.dll
+C:\dev\PROJETOS\StoryManager\StoryManager\TestProject\bin\Debug\net8.0\FluentValidation.dll

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "dgeW2LUotfvVDvryHNaQ8PXBBshwra/D5+Wq0s8dh227mBCZe4skW7LTlXXkaZyLH3HAqdVTxsb+utIlv/tB/g==",
+  "dgSpecHash": "MxfNqe9FRbvCzmMC27bgKZybuS+VGK5+hxEDREhUsQhNO3QHixhIa5b/X5fg6b6cGfyc4rSQn64XwB+Ck4tBVw==",
   "success": true,
   "projectFilePath": "C:\\dev\\PROJETOS\\StoryManager\\StoryManager\\TestProject\\TestProject.csproj",
   "expectedPackageFiles": [
@@ -11,6 +11,7 @@
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\fare\\2.1.1\\fare.2.1.1.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.1.0\\mediatr.extensions.microsoft.dependencyinjection.11.1.0.nupkg.sha512",

@@ -1,6 +1,8 @@
 ﻿using API.Application.ViewModel;
 using API.Services.DTOs;
+using API.Services.Handler;
 using API.Services.Requests;
+using API.Services.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,18 +53,20 @@ namespace API.Application.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult> Create([FromBody] StoryView storyView)
         {
-            if (storyView == null || string.IsNullOrWhiteSpace(storyView.Title) ||
-                string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))
-            {
-                return BadRequest();
-            }
-
             var createStoryRequest = new CreateStoryRequest
             {
                 Title = storyView.Title,
                 Description = storyView.Description,
                 Department = storyView.Department
             };
+
+            var validator = new CreateStoryRequestValidator();
+            var validationResult = await validator.ValidateAsync(createStoryRequest);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.Select(error => error.ErrorMessage));
+            }
 
             bool success = await _mediator.Send(createStoryRequest);
 
@@ -74,18 +78,13 @@ namespace API.Application.Controllers
             return StatusCode(201);
         }
 
+
         [HttpPut("stories/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> Update(int id, [FromBody] StoryView storyView)
         {
-            if (storyView == null || id <= 0 || string.IsNullOrWhiteSpace(storyView.Title) ||
-                string.IsNullOrWhiteSpace(storyView.Description) || string.IsNullOrWhiteSpace(storyView.Department))
-            {
-                return BadRequest();
-            }
-
             var updateStoryRequest = new UpdateStoryRequest
             {
                 Id = id,
@@ -94,19 +93,29 @@ namespace API.Application.Controllers
                 Department = storyView.Department
             };
 
+            var validator = new UpdateStoryRequestValidator();
+            var validationResult = await validator.ValidateAsync(updateStoryRequest);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.Select(error => error.ErrorMessage));
+            }
+
             bool success = await _mediator.Send(updateStoryRequest);
 
             if (!success)
             {
-                return NotFound("Story not found or failed to update.");
+                return NotFound();
             }
 
             return Ok();
         }
 
 
+
         [HttpDelete("stories/{id}")]
         [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> Delete(int id)
         {
@@ -114,6 +123,14 @@ namespace API.Application.Controllers
             {
                 Id = id
             };
+
+            var validator = new DeleteStoryRequestValidator();
+            var validationResult = await validator.ValidateAsync(deleteStoryRequest);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.Select(error => error.ErrorMessage));
+            }
 
             bool success = await _mediator.Send(deleteStoryRequest);
 
@@ -124,6 +141,7 @@ namespace API.Application.Controllers
 
             return Ok();
         }
+
 
     }
 }

@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "9ZuKKtb51QhhbP4PVc+JAktC8eBHNXqD9Cs5TUZCP4xs57EXrqSWEvEUBXbrH+a4MeOL5KxJZTaqjeJXQu4s+g==",
+  "dgSpecHash": "I8yQyrYNfpdzudJToxmy3t+yso3bTgPqOqJJ6Tr6XtvIp4NtHFDM3lxSoQzs4dqkk2Pssu1+4EQbAWbu0DZJIg==",
   "success": true,
   "projectFilePath": "C:\\dev\\PROJETOS\\StoryManager\\StoryManager\\API.Application\\API.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",

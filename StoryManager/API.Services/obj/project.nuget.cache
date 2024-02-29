@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "BdE8XD3kcxlFA8NXUy5dDCyI4yUXqUBuTJlNUWZZGGVXefGjqfzLEkYODBudLl6Ac9CSqFqEwUK2xc7NLydhKg==",
+  "dgSpecHash": "lQ/cHru0ddAIisHRWDdsu4U80fcaLijtnTtx2pgy1E+1O9gXTl0GVPfbovj5ytLSCiZarwvsgNW0giRr+L5IDQ==",
   "success": true,
   "projectFilePath": "C:\\dev\\PROJETOS\\StoryManager\\StoryManager\\API.Services\\API.Services.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
     "C:\\Users\\felipe.ribeiro\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.1.0\\mediatr.extensions.microsoft.dependencyinjection.11.1.0.nupkg.sha512",

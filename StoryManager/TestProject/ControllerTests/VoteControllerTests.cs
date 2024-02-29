@@ -3,6 +3,7 @@ using API.Application.ModelView;
 using API.Application.ViewModel;
 using API.Services.DTOs;
 using API.Services.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,60 +15,13 @@ namespace TestProject.ControllerTests
 {
     public class VoteControllerTests
     {
-        //[Fact]
-        //public async Task GetAll_ReturnsListOfVoteViews_WhenVotesExist()
-        //{
-        //    // Arrange
-        //    var mockVoteService = new Mock<IVoteService>();
-        //    var voteController = new VoteController(mockVoteService.Object);
-        //    int storyId = 1;
-
-        //    var voteDTOs = new List<VoteDTO>
-        //    {
-        //        new VoteDTO { VoteValue = true },
-        //        new VoteDTO { VoteValue = false },
-        //    };
-
-        //    mockVoteService.Setup(x => x.GetByStoryId(storyId))
-        //                   .ReturnsAsync(voteDTOs);
-
-        //    // Act
-        //    var result = await voteController.GetAll(storyId);
-
-        //    // Assert
-        //    var actionResult = Assert.IsType<ActionResult<List<VoteView>>>(result);
-        //    var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-
-        //    var voteViews = Assert.IsType<List<VoteView>>(okResult.Value);
-        //    Assert.NotEmpty(voteViews);
-
-        //}
-
-        [Fact]
-        public async Task GetAll_ReturnsNoContent_WhenVotesDoNotExist()
-        {
-            // Arrange
-            var mockVoteService = new Mock<IVoteService>();
-            var voteController = new VoteController(mockVoteService.Object);
-            int id = 1;
-
-            mockVoteService.Setup(x => x.GetByStoryId(id))
-                           .ReturnsAsync(new List<VoteDTO>());
-
-            // Act
-            var result = await voteController.GetAll(id);
-
-            // Assert
-            Assert.IsType<ActionResult<List<VoteView>>>(result);
-            var noContentResult = Assert.IsType<NoContentResult>(result.Result);
-        }
-
         [Fact]
         public async Task Create_ReturnsCreated_WhenValidInput()
         {
             // Arrange
             var mockVoteService = new Mock<IVoteService>();
-            var voteController = new VoteController(mockVoteService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var voteController = new VoteController(mockVoteService.Object, mockMediator.Object);
 
 
             var userId = 1;
@@ -111,7 +65,8 @@ namespace TestProject.ControllerTests
         {
             // Arrange
             var mockVoteService = new Mock<IVoteService>();
-            var voteController = new VoteController(mockVoteService.Object);
+            var mockMediator = new Mock<IMediator>();
+            var voteController = new VoteController(mockVoteService.Object, mockMediator.Object);
 
             var createVoteView = new CreateVoteView
             {
@@ -123,7 +78,7 @@ namespace TestProject.ControllerTests
             var result = await voteController.Create(storyId, createVoteView);
 
             // Assert
-            Assert.IsType<BadRequestResult>(result);
+            Assert.IsType<BadRequestObjectResult>(result);
 
             mockVoteService.Verify(x => x.Create(It.IsAny<VoteDTO>()), Times.Never);
         }

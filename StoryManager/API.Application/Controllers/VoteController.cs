@@ -2,10 +2,8 @@
 using API.Application.ViewModel;
 using API.Services.DTOs;
 using API.Services.Handler;
-using API.Services.Services;
 using API.Services.Services.Interfaces;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Application.Controllers
@@ -21,27 +19,26 @@ namespace API.Application.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("stories/{storyId}/votes")]
-        [ProducesResponseType(typeof(List<VoteView>), 200)]
-        [ProducesResponseType(204)]
-        public async Task<ActionResult<List<VoteView>>> GetAll(int storyId)
-        {
-            IEnumerable<VoteDTO> voteDTOs = await _voteService.GetByStoryId(storyId);
+        //[HttpGet("stories/{storyId}/votes")]
+        //[ProducesResponseType(typeof(List<VoteView>), 200)]
+        //[ProducesResponseType(204)]
+        //public async Task<ActionResult<List<VoteView>>> GetAll(int storyId)
+        //{
+        //    IEnumerable<VoteDTO> voteDTOs = await _voteService.GetByStoryId(storyId);
 
-            if (voteDTOs == null || !voteDTOs.Any())
-            {
-                return NoContent();
-            }
+        //    if (voteDTOs == null || !voteDTOs.Any())
+        //    {
+        //        return NoContent();
+        //    }
 
-            List<VoteView> voteViews = voteDTOs.Select(voteDTO => new VoteView
-            {
-                Name = voteDTO.User.Name,
-                VoteValue = voteDTO.VoteValue,
-            }).ToList();
+        //    List<VoteView> voteViews = voteDTOs.Select(voteDTO => new VoteView
+        //    {
+        //        Name = voteDTO.User.Name,
+        //        VoteValue = voteDTO.VoteValue,
+        //    }).ToList();
 
-            return Ok(voteViews);
-        }
-
+        //    return Ok(voteViews);
+        //}
 
         [HttpPost("stories/{storyId}/votes")]
         [ProducesResponseType(201)]
@@ -56,18 +53,18 @@ namespace API.Application.Controllers
                 VoteValue = createVoteView.VoteValue,
             };
 
+            var validator = new CreateVoteRequestValidator();
+            var validationResult = await validator.ValidateAsync(createVoteRequest);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.Select(error => error.ErrorMessage));
+            }
+
             bool success = await _mediator.Send(createVoteRequest);
 
-            if (!success)
-            {
-                return BadRequest();
-            }
 
             return StatusCode(201);
         }
-
-
-
-
     }
 }

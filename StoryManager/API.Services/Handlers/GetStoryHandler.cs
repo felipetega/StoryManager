@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using API.Services.DTOs;
+﻿using API.Services.DTOs;
 using API.Services.Requests;
 using API.Services.Services.Interfaces;
 using MediatR;

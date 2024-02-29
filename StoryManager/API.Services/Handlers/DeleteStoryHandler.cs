@@ -1,4 +1,4 @@
-﻿using API.Services.Requests;
+﻿using API.Services.Handler;
 using API.Services.Services.Interfaces;
 using MediatR;
 
@@ -15,7 +15,6 @@ namespace API.Services.Handlers
 
         public async Task<bool> Handle(DeleteStoryRequest storyRequest, CancellationToken cancellationToken)
         {
-            // Fail Fast Validations
             if (storyRequest.Id <= 0)
             {
                 return false;

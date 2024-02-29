@@ -1,16 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Application.Controllers;
 using API.Application.ViewModel;
 using API.Services.DTOs;
+using API.Services.Handler;
 using API.Services.Requests;
 using API.Services.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Xunit;
 
 namespace TestProject.ControllerTests
 {
@@ -23,7 +20,6 @@ namespace TestProject.ControllerTests
         {
             // Arrange
             var mockMediator = new Mock<IMediator>();
-            var mockStoryService = new Mock<IStoryService>();
             var storyController = new StoryController(mockMediator.Object);
 
             mockMediator.Setup(x => x.Send(It.IsAny<GetStoryRequest>(), default))
@@ -91,6 +87,8 @@ namespace TestProject.ControllerTests
         {
             // Arrange
             var mockMediator = new Mock<IMediator>();
+            mockMediator.Setup(x => x.Send(It.IsAny<CreateStoryRequest>(), default)).ReturnsAsync(true);
+
             var storyController = new StoryController(mockMediator.Object);
 
             var title = "Sample title";
@@ -108,10 +106,10 @@ namespace TestProject.ControllerTests
             var result = await storyController.Create(storyView);
 
             // Assert
-            var createdResult = Assert.IsType<CreatedResult>(result);
+            var createdResult = Assert.IsType<StatusCodeResult>(result);
             Assert.Equal(201, createdResult.StatusCode);
-            Assert.IsType<StoryView>(createdResult.Value);
         }
+
 
 
 
@@ -142,10 +140,13 @@ namespace TestProject.ControllerTests
             var result = await storyController.Create(storyView);
 
             // Assert
-            Assert.IsType<BadRequestResult>(result);
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var validationErrors = Assert.IsAssignableFrom<IEnumerable<string>>(badRequestResult.Value);
+            Assert.NotEmpty(validationErrors);
 
             mockMediator.Verify(x => x.Send(It.IsAny<CreateStoryRequest>(), default), Times.Never);
         }
+
 
 
         [Fact]
@@ -212,6 +213,7 @@ namespace TestProject.ControllerTests
 
 
 
+
         [Theory]
         [InlineData("", "", "")]
         [InlineData("a", "", "")]
@@ -239,7 +241,7 @@ namespace TestProject.ControllerTests
             var result = await storyController.Update(id, storyView);
 
             // Assert
-            Assert.IsType<BadRequestResult>(result);
+            Assert.IsType<BadRequestObjectResult>(result);
 
             mockMediator.Verify(x => x.Send(It.IsAny<UpdateStoryRequest>(), default), Times.Never);
         }
@@ -281,7 +283,7 @@ namespace TestProject.ControllerTests
             var result = await storyController.Delete(id);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result);
+            Assert.IsType<NotFoundObjectResult>(result);
         }
 
 

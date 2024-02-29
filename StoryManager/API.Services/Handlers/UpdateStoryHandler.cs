@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using API.Services.DTOs;
+﻿using API.Services.DTOs;
 using API.Services.Requests;
 using API.Services.Services.Interfaces;
 using MediatR;
@@ -26,7 +24,6 @@ namespace API.Services.Handlers
                 return false;
             }
 
-            // Create StoryDTO for update
             var storyDTO = new StoryDTO
             {
                 Title = storyRequest.Title,

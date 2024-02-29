@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using API.Services.DTOs;
+﻿using API.Services.DTOs;
 using API.Services.Services.Interfaces;
 using MediatR;
 
@@ -17,7 +15,6 @@ namespace API.Services.Handler
 
         public async Task<bool> Handle(CreateVoteRequest request, CancellationToken cancellationToken)
         {
-            // Fail Fast Validations
             if (request.UserId <= 0 || request.StoryId <= 0 || request.VoteValue is string)
             {
                 return false;

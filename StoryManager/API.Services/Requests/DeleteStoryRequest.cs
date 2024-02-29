@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 
-namespace API.Services.Requests
+namespace API.Services.Handler
 {
     public class DeleteStoryRequest : IRequest<bool>
     {
