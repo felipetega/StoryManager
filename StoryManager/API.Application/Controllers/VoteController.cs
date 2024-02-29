@@ -1,8 +1,10 @@
 ﻿using API.Application.ModelView;
 using API.Application.ViewModel;
 using API.Services.DTOs;
+using API.Services.Handler;
 using API.Services.Services;
 using API.Services.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +13,12 @@ namespace API.Application.Controllers
     public class VoteController : Controller
     {
         private readonly IVoteService _voteService;
+        private readonly IMediator _mediator;
 
-        public VoteController(IVoteService voteService)
+        public VoteController(IVoteService voteService, IMediator mediator)
         {
             _voteService = voteService;
+            _mediator = mediator;
         }
 
         [HttpGet("stories/{storyId}/votes")]
@@ -45,27 +49,23 @@ namespace API.Application.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult> Create(int storyId, [FromBody] CreateVoteView createVoteView)
         {
-            if (createVoteView == null || createVoteView.UserId <= 0 || createVoteView.UserId is string)
-            {
-                return BadRequest();
-            }
-
-            VoteDTO voteDTO = new VoteDTO
+            var createVoteRequest = new CreateVoteRequest
             {
                 StoryId = storyId,
                 UserId = createVoteView.UserId,
                 VoteValue = createVoteView.VoteValue,
             };
 
-            var createdVote = await _voteService.Create(voteDTO);
+            bool success = await _mediator.Send(createVoteRequest);
 
-            if (createdVote == false)
+            if (!success)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             return StatusCode(201);
         }
+
 
 
 

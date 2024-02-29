@@ -1,5 +1,6 @@
 using API.Infrastructure.Context;
 using API.Services.DTOs;
+using API.Services.Handler;
 using API.Services.Handlers;
 using API.Services.Requests;
 using API.Services.Services;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IRequestHandler<CreateStoryRequest, bool>, CreateStor
 builder.Services.AddScoped<IRequestHandler<UpdateStoryRequest, bool>, UpdateStoryHandler>();
 builder.Services.AddScoped<IRequestHandler<DeleteStoryRequest, bool>, DeleteStoryHandler>();
 builder.Services.AddScoped<IRequestHandler<GetStoryRequest, List<StoryDTO>>, GetStoryHandler>();
+builder.Services.AddScoped<IRequestHandler<CreateVoteRequest, bool>, CreateVoteHandler>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 // Add CORS services
